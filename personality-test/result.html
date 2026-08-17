@@ -1,0 +1,93 @@
+<!-- result.html: 結果画面。sessionStorageの診断結果を元に該当タイプの内容を表示する。 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本酒パーソナリティ診断 | 結果</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- data.jsの16タイプデータを使うため、result.jsより先に読み込む -->
+  <!-- share.jsはresult.jsが取得した診断結果（currentDiagnosisResult）を参照するため、result.jsの後に読み込む -->
+  <script src="js/data.js" defer></script>
+  <script src="js/result.js" defer></script>
+  <script src="js/share.js" defer></script>
+</head>
+<body>
+
+  <main class="page-wrapper result-page">
+
+    <!-- 診断結果が取得できない・該当タイプが見つからない場合に表示するエラーエリア -->
+    <div id="errorContainer" class="card error-message" hidden>
+      <p>診断結果を取得できませんでした。お手数ですが、最初からもう一度診断を行ってください。</p>
+      <a href="index.html" class="primary-button">トップ画面に戻る</a>
+    </div>
+
+    <!-- 診断結果の表示エリア -->
+    <div id="resultContainer" class="card result-container" hidden>
+
+      <p class="type-code" id="typeCodeText"></p>
+      <img id="typeImage" class="type-image" alt="">
+      <h1 id="typeNameText" class="type-name"></h1>
+
+      <section class="result-section">
+        <h2>性格</h2>
+        <p id="descriptionText"></p>
+      </section>
+
+      <section class="result-section">
+        <h2>食事の傾向</h2>
+        <p id="dietDescriptionText"></p>
+      </section>
+
+      <section class="result-section">
+        <h2>好む食べ物</h2>
+        <ul id="favoriteFoodsList" class="foods-list"></ul>
+      </section>
+
+      <section class="result-section sake-section">
+        <h2>おすすめの日本酒</h2>
+        <p id="sakeBrandText" class="sake-brand"></p>
+        <p id="sakeBreweryText"></p>
+        <p id="sakeAreaText"></p>
+      </section>
+
+      <!-- SNSシェア画像の生成エリア：Canvas APIでシェア用画像を作り、ダウンロードできるようにする -->
+      <section class="result-section share-section">
+        <h2>この結果をシェアする</h2>
+        <p class="share-description">画像を作成して、InstagramやXでシェアしよう！</p>
+
+        <div class="share-buttons">
+          <button type="button" id="generateInstagramImageButton" class="share-button share-button-instagram">
+            Instagram用に作成
+          </button>
+          <button type="button" id="generateXImageButton" class="share-button share-button-x">
+            X用に作成
+          </button>
+        </div>
+
+        <!-- 画像生成後にのみ表示するプレビュー・ダウンロードエリア -->
+        <div id="sharePreviewArea" class="share-preview-area" hidden>
+          <p id="sharePreviewCaption" class="share-preview-caption"></p>
+          <canvas id="shareCanvas" class="share-canvas"></canvas>
+          <button type="button" id="downloadShareImageButton" class="primary-button download-button">
+            画像を保存する
+          </button>
+        </div>
+      </section>
+
+      <div class="restart-area">
+        <a href="index.html" id="restartLink" class="primary-button">もう一度診断する</a>
+      </div>
+
+      <!-- 全32問の質問文と選択した回答の一覧（回答内容の振り返り用） -->
+      <section id="answersSection" class="result-section answers-section" hidden>
+        <h2>回答一覧</h2>
+        <ol id="answersList" class="answers-list"></ol>
+      </section>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

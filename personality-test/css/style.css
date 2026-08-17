@@ -1,0 +1,510 @@
+/* style.css: index / questions / result 3画面共通のスタイル。配色・フォント・カードなどの共通デザインを定義する。 */
+
+/* ------------------------------------------------------------
+   デザイントークン（配色・角丸・影などを一括管理する変数）
+   ------------------------------------------------------------ */
+
+:root {
+  --color-bg-top: #fff1e2;
+  --color-bg-bottom: #fffaf4;
+  --color-surface: #ffffff;
+  --color-primary: #ff7a45;
+  --color-primary-dark: #e85d2a;
+  --color-primary-light: #ffe4d1;
+  --color-accent: #2ec4b6;
+  --color-text: #4a3f35;
+  --color-text-muted: #8a7f72;
+  --color-danger: #d64545;
+  --color-danger-bg: #fdecea;
+  --color-danger-border: #f5b7b1;
+
+  --radius-card: 24px;
+  --radius-button: 999px;
+  --radius-input: 14px;
+
+  --shadow-card: 0 12px 32px rgba(232, 93, 42, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic", "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg, var(--color-bg-top) 0%, var(--color-bg-bottom) 45%);
+  color: var(--color-text);
+}
+
+h1, h2, p {
+  word-break: break-word;
+}
+
+/* ------------------------------------------------------------
+   共通レイアウト（各画面の外枠とカード）
+   ------------------------------------------------------------ */
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 32px 16px;
+}
+
+.card {
+  width: 100%;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: 28px 20px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ------------------------------------------------------------
+   共通ボタン
+   ------------------------------------------------------------ */
+
+.primary-button {
+  display: inline-block;
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border: none;
+  border-radius: var(--radius-button);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(232, 93, 42, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(232, 93, 42, 0.34);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+/* ------------------------------------------------------------
+   トップ画面（index.html）
+   ------------------------------------------------------------ */
+
+.top-page {
+  align-items: center;
+}
+
+.top-container {
+  max-width: 440px;
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.app-emoji {
+  margin: 0 0 8px;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.app-title {
+  margin: 0 0 16px;
+  font-size: clamp(1.5rem, 5vw, 1.9rem);
+  color: var(--color-primary-dark);
+}
+
+.app-description {
+  margin: 0 0 28px;
+  line-height: 1.8;
+  color: var(--color-text);
+}
+
+.start-button {
+  font-size: 1.15rem;
+  padding: 18px 24px;
+}
+
+.app-note {
+  margin: 16px 0 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------------------------------------
+   質問画面（questions.html）
+   ------------------------------------------------------------ */
+
+.quiz-container {
+  max-width: 480px;
+}
+
+/* 進捗バー */
+
+.progress-area {
+  margin-bottom: 28px;
+}
+
+.progress-bar-outer {
+  width: 100%;
+  height: 12px;
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-button);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: var(--radius-button);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* 質問一覧（32問をまとめてスクロール表示する） */
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 4px 0 28px;
+}
+
+.question-item {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-primary-light);
+  border-left: 4px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.question-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* 未回答のまま送信しようとした質問に付与する警告表示 */
+.question-item.unanswered-warning {
+  border-left-color: var(--color-danger);
+  padding-left: 12px;
+}
+
+.question-item-number {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+.question-item-text {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.7;
+}
+
+.question-item-answers {
+  display: flex;
+  gap: 8px;
+}
+
+/* 回答ボタン（当てはまる／当てはまらない） */
+
+.answer-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  width: auto;
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border: 2px solid var(--color-primary-light);
+  border-radius: var(--radius-input);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.answer-button:hover {
+  border-color: var(--color-primary);
+}
+
+.answer-button.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  font-weight: bold;
+}
+
+.answer-button.selected::after {
+  content: "\2713";
+  color: var(--color-primary-dark);
+  font-weight: bold;
+}
+
+/* 「診断結果を見る」ボタン：スクロール中も押しやすいよう画面下部に固定表示する */
+
+.submit-area {
+  text-align: center;
+  position: sticky;
+  bottom: 0;
+  background-color: var(--color-surface);
+  padding: 16px 0 4px;
+  margin-top: -4px;
+}
+
+.next-button {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-button);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(232, 93, 42, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.next-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.next-button:disabled {
+  background: var(--color-primary-light);
+  color: var(--color-text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.unanswered-hint {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  color: var(--color-danger);
+}
+
+/* ------------------------------------------------------------
+   結果画面（result.html）
+   ------------------------------------------------------------ */
+
+.result-container {
+  max-width: 560px;
+  text-align: center;
+}
+
+.type-code {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  color: var(--color-primary-dark);
+  font-weight: bold;
+}
+
+.type-image {
+  display: block;
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  margin: 12px auto;
+  border-radius: var(--radius-input);
+}
+
+.type-name {
+  margin: 0 0 24px;
+  font-size: 1.6rem;
+  color: var(--color-text);
+}
+
+.result-section {
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.result-section h2 {
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+  color: var(--color-accent);
+}
+
+.result-section p {
+  margin: 0;
+  line-height: 1.8;
+}
+
+.foods-list {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.9;
+}
+
+.sake-section {
+  background-color: var(--color-primary-light);
+  padding: 16px;
+  border-radius: var(--radius-input);
+}
+
+.sake-section h2 {
+  color: var(--color-primary-dark);
+}
+
+.sake-brand {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 4px !important;
+}
+
+/* SNSシェア画像生成エリア */
+
+.share-description {
+  margin: 0 0 16px;
+  color: var(--color-text-muted);
+}
+
+.share-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.share-button {
+  flex: 1;
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-button);
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+}
+
+.share-button-x {
+  background-color: #000000;
+}
+
+.share-button-instagram {
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+}
+
+.share-preview-area {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.share-preview-caption {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.share-canvas {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto 16px;
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-card);
+}
+
+.download-button {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.restart-area {
+  margin-top: 8px;
+}
+
+/* 回答一覧（全32問の質問文と選択した回答） */
+
+.answers-section {
+  margin-top: 36px;
+}
+
+.answers-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.answer-record-item {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-primary-light);
+}
+
+.answer-record-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.answer-record-question {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.answer-record-answer {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--color-primary-dark);
+}
+
+/* ------------------------------------------------------------
+   エラーメッセージ（共通）
+   ------------------------------------------------------------ */
+
+.error-message {
+  max-width: 480px;
+  margin: 0 auto;
+  color: var(--color-danger);
+  background-color: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  text-align: center;
+}
+
+.error-message p {
+  margin: 0 0 16px;
+}
+
+/* ------------------------------------------------------------
+   レスポンシブ対応（タブレット・PCなど広い画面向けの調整）
+   ------------------------------------------------------------ */
+
+@media (min-width: 600px) {
+  .page-wrapper {
+    padding: 56px 24px;
+  }
+
+  .card {
+    padding: 40px 36px;
+  }
+
+  .top-container {
+    padding: 48px 40px;
+  }
+}

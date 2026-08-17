@@ -1,0 +1,47 @@
+<!-- questions.html: 質問画面。32問をまとめて表示し、スクロールしながら回答。全問回答後「診断結果を見る」で結果を計算しresult.htmlへ遷移する。 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本酒パーソナリティ診断 | 質問</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- questionsData.jsで質問データ（32問）を定義しているため、questions.jsより先に読み込む -->
+  <script src="js/questionsData.js" defer></script>
+  <script src="js/questions.js" defer></script>
+</head>
+<body>
+
+  <main class="page-wrapper quiz-page">
+
+    <!-- 質問データが読み込めない場合にのみ表示するエラー表示エリア -->
+    <div id="errorMessage" class="card error-message" hidden>
+      質問データの読み込みに失敗しました。ページを再読み込みしてください。
+    </div>
+
+    <!-- 質問と回答ボタンをまとめた診断本体エリア -->
+    <div id="quizContainer" class="card quiz-container" hidden>
+
+      <!-- 進捗バー：32問中何問に回答済みかを視覚的・テキストの両方で表示する -->
+      <div class="progress-area">
+        <div class="progress-bar-outer">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <p id="progressText" class="progress-text"></p>
+      </div>
+
+      <!-- 32問すべてを一覧表示するエリア（中身はquestions.jsがJSONデータから動的に生成する） -->
+      <div id="questionsList" class="questions-list"></div>
+
+      <!-- 全問回答するまでは非活性になる「診断結果を見る」ボタン -->
+      <div class="submit-area">
+        <button id="submitButton" class="next-button" type="button" disabled>診断結果を見る</button>
+        <p id="unansweredHint" class="unanswered-hint" hidden></p>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>
