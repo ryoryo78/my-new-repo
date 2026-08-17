@@ -6,7 +6,20 @@
 // ------------------------------------------------------------
 // 診断全体で共有する状態（グローバル変数）
 // ------------------------------------------------------------
-const RESULT_STORAGE_KEY = "sakePersonalityResult"; // result.htmlへ渡す際のsessionStorageキー
+const RESULT_STORAGE_KEY = "sakePersonalityResult"; // result.htmlへ渡す際のlocalStorageキー
+
+// 回答ボタンの内部的な値（agree/disagree）と、画面表示用の日本語ラベルの対応
+// （ボタン自体は○×記号で表示するが、スクリーンリーダー向けラベルや回答一覧表示ではこちらを使う）
+const ANSWER_LABELS = {
+  agree: "当てはまる",
+  disagree: "当てはまらない"
+};
+
+// 回答ボタンに表示する記号（当てはまる＝○、当てはまらない＝×）
+const ANSWER_SYMBOLS = {
+  agree: "○",
+  disagree: "×"
+};
 
 let questionList = []; // 読み込んだ32問分の質問データ
 let userAnswers = [];  // 各質問への回答を格納する配列（"agree" / "disagree" / null）、questionListと同じ並び順
@@ -120,8 +133,8 @@ function createQuestionItemElement(question, questionIndex) {
   const answerArea = document.createElement("div");
   answerArea.className = "question-item-answers";
 
-  const agreeButton = createAnswerButtonElement(questionIndex, "agree", "当てはまる");
-  const disagreeButton = createAnswerButtonElement(questionIndex, "disagree", "当てはまらない");
+  const agreeButton = createAnswerButtonElement(questionIndex, "agree");
+  const disagreeButton = createAnswerButtonElement(questionIndex, "disagree");
 
   answerArea.appendChild(agreeButton);
   answerArea.appendChild(disagreeButton);
@@ -133,12 +146,13 @@ function createQuestionItemElement(question, questionIndex) {
   return questionItem;
 }
 
-// 1つの回答ボタン（当てはまる／当てはまらない）のDOM要素を作成する
-function createAnswerButtonElement(questionIndex, answerType, label) {
+// 1つの回答ボタン（当てはまる＝○／当てはまらない＝×）のDOM要素を作成する
+function createAnswerButtonElement(questionIndex, answerType) {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "answer-button";
-  button.textContent = label;
+  button.className = "answer-button answer-button-" + answerType;
+  button.textContent = ANSWER_SYMBOLS[answerType];
+  button.setAttribute("aria-label", ANSWER_LABELS[answerType]);
   button.dataset.questionIndex = String(questionIndex);
   button.dataset.answerType = answerType;
 
@@ -261,7 +275,7 @@ function finishQuiz() {
   const personalityTypeCode = determinePersonalityType(axisScores);
   const answeredQuestions = buildAnsweredQuestionsSummary();
 
-  saveResultToSessionStorage(personalityTypeCode, axisScores, answeredQuestions);
+  saveResultToLocalStorage(personalityTypeCode, axisScores, answeredQuestions);
 
   window.location.href = "result.html";
 }
@@ -309,12 +323,6 @@ function determinePersonalityType(scores) {
 // 結果画面への受け渡し
 // ------------------------------------------------------------
 
-// 回答ボタンの内部的な値（agree/disagree）を、画面表示用の日本語ラベルに変換する
-const ANSWER_LABELS = {
-  agree: "当てはまる",
-  disagree: "当てはまらない"
-};
-
 // 全32問について「質問文」と「選択した回答」をまとめた一覧を作成する
 // result.html側で回答一覧として表示するために使う
 function buildAnsweredQuestionsSummary() {
@@ -325,14 +333,17 @@ function buildAnsweredQuestionsSummary() {
   }));
 }
 
-// 診断結果（タイプコード・軸ごとのスコア・回答一覧）をsessionStorageに保存する
+// 診断結果（タイプコード・軸ごとのスコア・回答一覧）をlocalStorageに保存する
 // result.html側はこのキーを読み取ってタイプ判定結果や回答一覧を表示する
-function saveResultToSessionStorage(typeCode, scores, answeredQuestions) {
+// sessionStorageではなくlocalStorageを使うことで、タブやブラウザを閉じた後も
+// 一定期間（result.js側のRESULT_EXPIRY_MSで定義）結果を保持できるようにしている
+function saveResultToLocalStorage(typeCode, scores, answeredQuestions) {
   const resultData = {
     typeCode: typeCode,
     scores: scores,
-    answeredQuestions: answeredQuestions
+    answeredQuestions: answeredQuestions,
+    savedAt: Date.now() // 保存日時。result.js側で保持期限切れかどうかの判定に使う
   };
 
-  sessionStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(resultData));
+  localStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(resultData));
 }

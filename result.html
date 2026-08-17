@@ -11,8 +11,22 @@
   <script src="js/data.js" defer></script>
   <script src="js/result.js" defer></script>
   <script src="js/share.js" defer></script>
+  <script src="js/nav.js" defer></script>
 </head>
 <body>
+
+  <!-- ページ間を自由に行き来できる共通ナビゲーション（3本線ボタンを押すとメニューが開く） -->
+  <nav class="top-nav" aria-label="ページナビゲーション">
+    <button type="button" id="navToggleButton" class="nav-toggle-button" aria-expanded="false" aria-controls="navMenu" aria-label="メニューを開く">
+      <span class="nav-toggle-icon" aria-hidden="true"></span>
+    </button>
+    <div id="navMenu" class="nav-menu" hidden>
+      <a href="index.html" class="top-nav-link">ホーム</a>
+      <a href="questions.html" class="top-nav-link">診断</a>
+      <a href="result.html" class="top-nav-link active">診断結果</a>
+      <a href="types.html" class="top-nav-link">タイプ一覧</a>
+    </div>
+  </nav>
 
   <main class="page-wrapper result-page">
 
@@ -51,24 +65,25 @@
         <p id="sakeAreaText"></p>
       </section>
 
-      <!-- SNSシェア画像の生成エリア：Canvas APIでシェア用画像を作り、ダウンロードできるようにする -->
+      <!-- SNSシェア画像の生成エリア：Canvas APIでシェア用画像を作り、ワンタップでOSの共有画面からSNSへシェアする -->
       <section class="result-section share-section">
         <h2>この結果をシェアする</h2>
-        <p class="share-description">画像を作成して、InstagramやXでシェアしよう！</p>
+        <p class="share-description">ワンタップでInstagramやXにシェアしよう！</p>
 
         <div class="share-buttons">
-          <button type="button" id="generateInstagramImageButton" class="share-button share-button-instagram">
-            Instagram用に作成
+          <button type="button" id="shareOnInstagramButton" class="share-button share-button-instagram">
+            Instagramでシェア
           </button>
-          <button type="button" id="generateXImageButton" class="share-button share-button-x">
-            X用に作成
+          <button type="button" id="shareOnXButton" class="share-button share-button-x">
+            Xでシェア
           </button>
         </div>
 
-        <!-- 画像生成後にのみ表示するプレビュー・ダウンロードエリア -->
+        <!-- ワンタップシェア（Web Share API）に対応していない環境向けの代替表示：画像プレビュー＋保存ボタン -->
         <div id="sharePreviewArea" class="share-preview-area" hidden>
           <p id="sharePreviewCaption" class="share-preview-caption"></p>
           <canvas id="shareCanvas" class="share-canvas"></canvas>
+          <p class="share-fallback-note">お使いのブラウザは直接シェアに対応していないため、画像を保存してSNSアプリから投稿してください。</p>
           <button type="button" id="downloadShareImageButton" class="primary-button download-button">
             画像を保存する
           </button>

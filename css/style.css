@@ -17,6 +17,8 @@
   --color-danger: #d64545;
   --color-danger-bg: #fdecea;
   --color-danger-border: #f5b7b1;
+  --color-maru: #e6483c;
+  --color-batsu: #3b6fd1;
 
   --radius-card: 24px;
   --radius-button: 999px;
@@ -49,7 +51,8 @@ h1, h2, p {
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 32px 16px;
+  /* 右上に固定表示する.top-navと重ならないよう、上側にだけ余分な余白を確保する */
+  padding: 72px 16px 32px;
 }
 
 .card {
@@ -58,6 +61,103 @@ h1, h2, p {
   border-radius: var(--radius-card);
   padding: 28px 20px;
   box-shadow: var(--shadow-card);
+}
+
+/* ------------------------------------------------------------
+   共通ナビゲーション（画面右上・全ページ共通）
+   ------------------------------------------------------------ */
+
+.top-nav {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* ハンバーガーボタン（3本線） */
+
+.nav-toggle-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-button);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.nav-toggle-icon,
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--color-primary-dark);
+}
+
+.nav-toggle-icon {
+  position: relative;
+}
+
+.nav-toggle-icon::before {
+  position: absolute;
+  left: 0;
+  top: -6px;
+}
+
+.nav-toggle-icon::after {
+  position: absolute;
+  left: 0;
+  top: 6px;
+}
+
+/* ハンバーガーボタンを押すと開く、ページ間リンクのメニュー */
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  background-color: rgba(255, 255, 255, 0.96);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-card);
+}
+
+/* hidden属性が付いているときは必ず非表示にする（display:flexより優先させる） */
+.nav-menu[hidden] {
+  display: none;
+}
+
+.top-nav-link {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  text-align: right;
+  border-radius: var(--radius-input);
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.top-nav-link:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.top-nav-link.active {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #ffffff;
 }
 
 /* ------------------------------------------------------------
@@ -102,36 +202,70 @@ h1, h2, p {
 .top-container {
   max-width: 440px;
   text-align: center;
-  padding: 40px 24px;
-}
-
-.app-emoji {
-  margin: 0 0 8px;
-  font-size: 3rem;
-  line-height: 1;
+  padding: 40px 0;
 }
 
 .app-title {
-  margin: 0 0 16px;
+  margin: 0 24px 20px;
   font-size: clamp(1.5rem, 5vw, 1.9rem);
   color: var(--color-primary-dark);
 }
 
 .app-description {
-  margin: 0 0 28px;
+  margin: 20px 24px 28px;
   line-height: 1.8;
   color: var(--color-text);
 }
 
 .start-button {
+  margin: 0 24px;
+  width: calc(100% - 48px);
   font-size: 1.15rem;
   padding: 18px 24px;
 }
 
-.app-note {
-  margin: 16px 0 0;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+/* 16タイプのキャラクター画像が横に流れ続けるスクロールエリア */
+
+.character-scroller {
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.character-scroller-track {
+  display: flex;
+  width: max-content;
+  gap: 20px;
+  padding: 4px 0;
+  animation: character-scroll 56s linear infinite;
+}
+
+.character-scroller-image {
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--color-primary-light);
+  background-color: var(--color-surface);
+}
+
+@keyframes character-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* 画像を2セット並べているため、ちょうど半分（1セット分）動かすと継ぎ目なくループする */
+    transform: translateX(-50%);
+  }
+}
+
+/* 動きを抑えたい設定を優先するユーザーには、アニメーションを止める */
+@media (prefers-reduced-motion: reduce) {
+  .character-scroller-track {
+    animation: none;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -142,10 +276,15 @@ h1, h2, p {
   max-width: 480px;
 }
 
-/* 進捗バー */
+/* 進捗バー：スクロールしても常に見えるよう画面上部に固定表示する */
 
 .progress-area {
-  margin-bottom: 28px;
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+  background-color: var(--color-surface);
+  padding: 8px 0 16px;
+  margin-bottom: 12px;
 }
 
 .progress-bar-outer {
@@ -214,43 +353,56 @@ h1, h2, p {
 
 .question-item-answers {
   display: flex;
-  gap: 8px;
+  justify-content: center;
+  gap: 56px;
 }
 
-/* 回答ボタン（当てはまる／当てはまらない） */
+/* 回答ボタン（当てはまる＝○／当てはまらない＝×） */
 
 .answer-button {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex: 1;
-  width: auto;
-  min-height: 48px;
-  padding: 12px 16px;
-  font-size: 0.95rem;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  font-size: 1.7rem;
+  font-weight: bold;
+  line-height: 1;
   font-family: inherit;
-  border: 2px solid var(--color-primary-light);
-  border-radius: var(--radius-input);
+  border: 3px solid;
+  border-radius: 50%;
   background-color: var(--color-surface);
-  color: var(--color-text);
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .answer-button:hover {
-  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.answer-button-agree {
+  border-color: var(--color-maru);
+  color: var(--color-maru);
+}
+
+.answer-button-disagree {
+  border-color: var(--color-batsu);
+  color: var(--color-batsu);
 }
 
 .answer-button.selected {
-  border-color: var(--color-primary);
-  background-color: var(--color-primary-light);
-  font-weight: bold;
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
-.answer-button.selected::after {
-  content: "\2713";
-  color: var(--color-primary-dark);
-  font-weight: bold;
+.answer-button-agree.selected {
+  background-color: var(--color-maru);
+}
+
+.answer-button-disagree.selected {
+  background-color: var(--color-batsu);
 }
 
 /* 「診断結果を見る」ボタン：スクロール中も押しやすいよう画面下部に固定表示する */
@@ -308,10 +460,10 @@ h1, h2, p {
 
 .type-code {
   margin: 0;
-  font-size: 0.95rem;
-  letter-spacing: 0.1em;
+  font-size: 2.4rem;
+  letter-spacing: 0.08em;
   color: var(--color-primary-dark);
-  font-weight: bold;
+  font-weight: 800;
 }
 
 .type-image {
@@ -398,6 +550,12 @@ h1, h2, p {
   transform: translateY(-2px);
 }
 
+.share-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .share-button-x {
   background-color: #000000;
 }
@@ -414,6 +572,12 @@ h1, h2, p {
 .share-preview-caption {
   margin: 0 0 12px;
   font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.share-fallback-note {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
   color: var(--color-text-muted);
 }
 
@@ -469,9 +633,128 @@ h1, h2, p {
 
 .answer-record-answer {
   margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.answer-record-answer-agree {
+  color: var(--color-maru);
+}
+
+.answer-record-answer-disagree {
+  color: var(--color-batsu);
+}
+
+/* ------------------------------------------------------------
+   タイプ一覧画面（types.html）
+   ------------------------------------------------------------ */
+
+.types-container {
+  max-width: 640px;
+  text-align: center;
+}
+
+.types-title {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+  color: var(--color-primary-dark);
+}
+
+.types-description {
+  margin: 0 0 24px;
+  color: var(--color-text-muted);
+}
+
+.types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.type-card {
+  text-align: center;
+}
+
+.type-card-image-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.type-card-image-button:hover {
+  transform: translateY(-2px);
+}
+
+.type-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-input);
+  border: 2px solid var(--color-primary-light);
+}
+
+.type-card-nickname {
+  margin: 8px 0 2px;
   font-size: 0.85rem;
   font-weight: bold;
+  line-height: 1.4;
+}
+
+.type-card-code {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+/* タイプ詳細モーダル */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(74, 63, 53, 0.5);
+  z-index: 100;
+}
+
+/* hidden属性が付いているときは必ず非表示にする（display:flexより優先させる） */
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-primary-light);
   color: var(--color-primary-dark);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
 }
 
 /* ------------------------------------------------------------
@@ -497,7 +780,7 @@ h1, h2, p {
 
 @media (min-width: 600px) {
   .page-wrapper {
-    padding: 56px 24px;
+    padding: 72px 24px 56px;
   }
 
   .card {
@@ -505,6 +788,6 @@ h1, h2, p {
   }
 
   .top-container {
-    padding: 48px 40px;
+    padding: 48px 0;
   }
 }

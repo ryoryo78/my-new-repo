@@ -1,0 +1,75 @@
+<!-- types.html: 性格タイプ一覧ページ。16タイプの通称・画像・タイプ名を一覧表示し、画像クリックで詳細をモーダル表示する。 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本酒パーソナリティ診断 | タイプ一覧</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- data.jsの16タイプデータを使うため、types.jsより先に読み込む -->
+  <script src="js/data.js" defer></script>
+  <script src="js/types.js" defer></script>
+  <script src="js/nav.js" defer></script>
+</head>
+<body>
+
+  <!-- ページ間を自由に行き来できる共通ナビゲーション（3本線ボタンを押すとメニューが開く） -->
+  <nav class="top-nav" aria-label="ページナビゲーション">
+    <button type="button" id="navToggleButton" class="nav-toggle-button" aria-expanded="false" aria-controls="navMenu" aria-label="メニューを開く">
+      <span class="nav-toggle-icon" aria-hidden="true"></span>
+    </button>
+    <div id="navMenu" class="nav-menu" hidden>
+      <a href="index.html" class="top-nav-link">ホーム</a>
+      <a href="questions.html" class="top-nav-link">診断</a>
+      <a href="result.html" class="top-nav-link">診断結果</a>
+      <a href="types.html" class="top-nav-link active">タイプ一覧</a>
+    </div>
+  </nav>
+
+  <main class="page-wrapper types-page">
+    <div class="card types-container">
+
+      <h1 class="types-title">16タイプ一覧</h1>
+      <p class="types-description">画像をクリックすると、そのタイプの詳しい説明を見ることができます。</p>
+
+      <!-- 16タイプ分のカード（中身はtypes.jsがdata.jsのデータから動的に生成する） -->
+      <div id="typesGrid" class="types-grid"></div>
+
+    </div>
+  </main>
+
+  <!-- タイプ詳細モーダル：画像クリック時にそのタイプの詳しい説明を表示する -->
+  <div id="typeDetailModal" class="modal-overlay" hidden>
+    <div class="modal-content card">
+      <button type="button" id="closeModalButton" class="modal-close-button" aria-label="閉じる">×</button>
+
+      <p class="type-code" id="modalTypeCode"></p>
+      <img id="modalTypeImage" class="type-image" alt="">
+      <h2 id="modalTypeName" class="type-name"></h2>
+
+      <section class="result-section">
+        <h3>性格</h3>
+        <p id="modalDescription"></p>
+      </section>
+
+      <section class="result-section">
+        <h3>食事の傾向</h3>
+        <p id="modalDietDescription"></p>
+      </section>
+
+      <section class="result-section">
+        <h3>好む食べ物</h3>
+        <ul id="modalFavoriteFoods" class="foods-list"></ul>
+      </section>
+
+      <section class="result-section sake-section">
+        <h3>おすすめの日本酒</h3>
+        <p id="modalSakeBrand" class="sake-brand"></p>
+        <p id="modalSakeBrewery"></p>
+        <p id="modalSakeArea"></p>
+      </section>
+    </div>
+  </div>
+
+</body>
+</html>

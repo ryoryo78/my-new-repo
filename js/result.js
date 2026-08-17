@@ -1,11 +1,19 @@
 // result.js
 // 結果画面（result.html）の動作を制御するスクリプト。
-// 役割：sessionStorageからの診断結果取得 → 該当タイプデータの検索 →
-//       画面への描画 → （データが不正な場合の）エラー表示。
+// 役割：localStorageからの診断結果取得 → 該当タイプデータの検索 →
+//       画面への描画 → （データが不正・期限切れの場合の）エラー表示。
 // 16タイプのデータ（personalityTypes / sakeRecommendations）は
 // data.js で定義されているものをそのまま利用する。
 
 const RESULT_STORAGE_KEY = "sakePersonalityResult"; // questions.js側と揃えるストレージキー
+const RESULT_EXPIRY_MS = 24 * 60 * 60 * 1000; // 診断結果をlocalStorageに保持しておく期間（24時間）
+
+// 回答一覧に表示する記号と色分け用クラスの対応
+// （questions.js側の回答ラベル「当てはまる／当てはまらない」を、○×記号に変換して表示する）
+const ANSWER_DISPLAY = {
+  "当てはまる": { symbol: "○", className: "answer-record-answer-agree" },
+  "当てはまらない": { symbol: "×", className: "answer-record-answer-disagree" }
+};
 
 // 画面上のDOM要素をまとめて保持しておくオブジェクト（init内で取得する）
 let elements = {};
@@ -70,10 +78,10 @@ function cacheDomElements() {
 // 診断結果データの取得
 // ------------------------------------------------------------
 
-// sessionStorageから診断結果（タイプコードとスコア）を読み込んで返す
-// 取得できない・形式が不正な場合はnullを返す
+// localStorageから診断結果（タイプコードとスコア）を読み込んで返す
+// 取得できない・形式が不正・保持期限切れの場合はnullを返す
 function getResultDataFromStorage() {
-  const rawData = sessionStorage.getItem(RESULT_STORAGE_KEY);
+  const rawData = localStorage.getItem(RESULT_STORAGE_KEY);
 
   if (!rawData) {
     return null;
@@ -86,11 +94,27 @@ function getResultDataFromStorage() {
       return null;
     }
 
+    if (isResultExpired(parsedData.savedAt)) {
+      // 期限切れの結果はストレージからも削除しておく
+      localStorage.removeItem(RESULT_STORAGE_KEY);
+      return null;
+    }
+
     return parsedData;
   } catch (error) {
     // JSON.parseに失敗した場合（データが壊れている場合）もnullを返す
     return null;
   }
+}
+
+// 保存日時（savedAt）を元に、保持期限（RESULT_EXPIRY_MS）を過ぎているかどうかを判定する
+function isResultExpired(savedAt) {
+  // savedAtが無い古い形式のデータは、期限切れ扱いにせずそのまま表示する
+  if (typeof savedAt !== "number") {
+    return false;
+  }
+
+  return Date.now() - savedAt > RESULT_EXPIRY_MS;
 }
 
 // ------------------------------------------------------------
@@ -162,9 +186,13 @@ function createAnswerRecordElement(item) {
   questionText.className = "answer-record-question";
   questionText.textContent = "Q" + item.questionNumber + ". " + item.questionText;
 
+  // 回答ラベル（当てはまる／当てはまらない）を○×記号に変換して表示する
+  const answerDisplay = ANSWER_DISPLAY[item.answerLabel];
+
   const answerText = document.createElement("p");
-  answerText.className = "answer-record-answer";
-  answerText.textContent = "回答：" + item.answerLabel;
+  answerText.className = "answer-record-answer" + (answerDisplay ? " " + answerDisplay.className : "");
+  answerText.textContent = answerDisplay ? answerDisplay.symbol : item.answerLabel;
+  answerText.setAttribute("aria-label", "回答：" + item.answerLabel);
 
   listItem.appendChild(questionText);
   listItem.appendChild(answerText);
@@ -189,13 +217,13 @@ function showResultContainer() {
 // ------------------------------------------------------------
 
 // 「もう一度診断する」リンクをクリックしたときに、
-// 古い診断結果が残らないようsessionStorageをクリアしておく
+// 古い診断結果が残らないようlocalStorageをクリアしておく
 function setupRestartLink() {
   const restartLink = document.getElementById("restartLink");
 
   if (restartLink) {
     restartLink.addEventListener("click", () => {
-      sessionStorage.removeItem(RESULT_STORAGE_KEY);
+      localStorage.removeItem(RESULT_STORAGE_KEY);
     });
   }
 }

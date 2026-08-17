@@ -9,8 +9,22 @@
   <!-- questionsData.jsで質問データ（32問）を定義しているため、questions.jsより先に読み込む -->
   <script src="js/questionsData.js" defer></script>
   <script src="js/questions.js" defer></script>
+  <script src="js/nav.js" defer></script>
 </head>
 <body>
+
+  <!-- ページ間を自由に行き来できる共通ナビゲーション（3本線ボタンを押すとメニューが開く） -->
+  <nav class="top-nav" aria-label="ページナビゲーション">
+    <button type="button" id="navToggleButton" class="nav-toggle-button" aria-expanded="false" aria-controls="navMenu" aria-label="メニューを開く">
+      <span class="nav-toggle-icon" aria-hidden="true"></span>
+    </button>
+    <div id="navMenu" class="nav-menu" hidden>
+      <a href="index.html" class="top-nav-link">ホーム</a>
+      <a href="questions.html" class="top-nav-link active">診断</a>
+      <a href="result.html" class="top-nav-link">診断結果</a>
+      <a href="types.html" class="top-nav-link">タイプ一覧</a>
+    </div>
+  </nav>
 
   <main class="page-wrapper quiz-page">
 

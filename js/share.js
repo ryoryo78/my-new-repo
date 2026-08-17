@@ -1,7 +1,13 @@
 // share.js
 // 結果画面（result.html）のSNSシェア用画像生成を担当するスクリプト。
-// 役割：フォーマット選択 → Canvasへの描画 → プレビュー表示 → PNG画像としての保存（ダウンロード）。
+// 役割：フォーマット選択 → Canvasへの描画 → Web Share APIでのワンタップシェア
+//       （対応していない環境ではプレビュー表示＋PNG画像の保存にフォールバック）。
 // 診断結果（currentDiagnosisResult）はresult.jsが結果取得時に設定したものをそのまま利用する。
+//
+// 補足：ブラウザやWebサイトから特定のSNS（X・Instagramなど）へ直接・自動で投稿することはできない
+// （各SNS側がスパム防止のためそのような外部APIを提供していない）。
+// そのため、ブラウザ標準のWeb Share API（navigator.share）でOSの共有シートを呼び出し、
+// ユーザーがそこでシェア先のSNSをワンタップで選ぶ、という一般的な実装方法を採用している。
 
 const FONT_FAMILY = '"Hiragino Maru Gothic ProN", "Yu Gothic", "Helvetica Neue", Arial, sans-serif';
 
@@ -27,8 +33,8 @@ function initShareFeature() {
 // 操作に必要なDOM要素をまとめて取得する
 function cacheShareDomElements() {
   shareElements = {
-    generateInstagramButton: document.getElementById("generateInstagramImageButton"),
-    generateXButton: document.getElementById("generateXImageButton"),
+    shareOnInstagramButton: document.getElementById("shareOnInstagramButton"),
+    shareOnXButton: document.getElementById("shareOnXButton"),
     previewArea: document.getElementById("sharePreviewArea"),
     previewCaption: document.getElementById("sharePreviewCaption"),
     canvas: document.getElementById("shareCanvas"),
@@ -38,31 +44,91 @@ function cacheShareDomElements() {
 
 // 各ボタンにクリック時の処理を割り当てる
 function setupShareEventListeners() {
-  shareElements.generateInstagramButton.addEventListener("click", () => handleGenerateButtonClick("instagram"));
-  shareElements.generateXButton.addEventListener("click", () => handleGenerateButtonClick("x"));
+  shareElements.shareOnInstagramButton.addEventListener("click", () => handleShareButtonClick("instagram"));
+  shareElements.shareOnXButton.addEventListener("click", () => handleShareButtonClick("x"));
   shareElements.downloadButton.addEventListener("click", downloadCurrentShareImage);
 }
 
 // ------------------------------------------------------------
-// 画像生成
+// 画像生成 → ワンタップシェア
 // ------------------------------------------------------------
 
-// 「Instagram用に作成」「X用に作成」ボタンが押されたときの処理
-async function handleGenerateButtonClick(formatKey) {
+// 「Instagramでシェア」「Xでシェア」ボタンが押されたときの処理
+// 画像を生成したうえで、Web Share APIに対応していればそのままOSの共有シートを開く
+// （対応していない場合のみ、画像プレビュー＋保存ボタンのフォールバック表示に切り替える）
+async function handleShareButtonClick(formatKey) {
   // 診断結果が取得できていない場合は何もしない
   // （通常は結果が無いとこのボタン自体が表示されないため、念のための防御的チェック）
   if (!currentDiagnosisResult) {
     return;
   }
 
+  const button = formatKey === "instagram" ? shareElements.shareOnInstagramButton : shareElements.shareOnXButton;
   const format = SHARE_IMAGE_FORMATS[formatKey];
 
-  // タイプごとのキャラクター画像を読み込んでから描画する（読み込めない場合はnullのまま進む）
-  const characterImage = await loadTypeCharacterImage(currentDiagnosisResult.typeCode);
+  button.disabled = true;
 
-  drawShareImage(shareElements.canvas, format, currentDiagnosisResult, characterImage);
-  currentShareFormatKey = formatKey;
-  showSharePreview(format);
+  try {
+    // タイプごとのキャラクター画像を読み込んでから描画する（読み込めない場合はnullのまま進む）
+    const characterImage = await loadTypeCharacterImage(currentDiagnosisResult.typeCode);
+
+    drawShareImage(shareElements.canvas, format, currentDiagnosisResult, characterImage);
+    currentShareFormatKey = formatKey;
+
+    const didShareNatively = await tryNativeShare();
+
+    if (!didShareNatively) {
+      showSharePreview(format);
+    }
+  } finally {
+    button.disabled = false;
+  }
+}
+
+// Web Share API（ファイル共有）に対応していれば、生成した画像でOSの共有シートを開く
+// 対応していない場合や画像化に失敗した場合はfalseを返し、呼び出し側で保存プレビューにフォールバックする
+function tryNativeShare() {
+  return new Promise((resolve) => {
+    shareElements.canvas.toBlob(async (blob) => {
+      if (!blob) {
+        resolve(false);
+        return;
+      }
+
+      const file = new File([blob], buildShareImageFileName(), { type: "image/png" });
+      const canShareFiles =
+        typeof navigator.share === "function" &&
+        typeof navigator.canShare === "function" &&
+        navigator.canShare({ files: [file] });
+
+      if (!canShareFiles) {
+        resolve(false);
+        return;
+      }
+
+      try {
+        await navigator.share({
+          files: [file],
+          title: "日本酒パーソナリティ診断",
+          text: buildShareText()
+        });
+      } catch (error) {
+        // ユーザーが共有シートをキャンセルした場合などもここに来るが、
+        // シート自体は正しく表示できているため、保存プレビューへのフォールバックは行わない
+      }
+
+      resolve(true);
+    }, "image/png");
+  });
+}
+
+// シェア時に添える紹介文を組み立てる
+function buildShareText() {
+  return (
+    currentDiagnosisResult.typeCode +
+    "「" + currentDiagnosisResult.personality.typeName + "」" +
+    " - 日本酒パーソナリティ診断"
+  );
 }
 
 // タイプコードに対応するキャラクター画像（images/タイプコード.png）を読み込む
