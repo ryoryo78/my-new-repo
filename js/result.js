@@ -15,6 +15,15 @@ const ANSWER_DISPLAY = {
   "当てはまらない": { symbol: "×", className: "answer-record-answer-disagree" }
 };
 
+// 4軸それぞれの前半文字（左側）・後半文字（右側）と、その説明ラベルの対応
+// questions.js側の判定ロジック（judgeAxis）と対になる定義
+const AXIS_DEFINITIONS = [
+  { frontLetter: "E", backLetter: "I", frontLabel: "社交・外食派", backLabel: "内省・自炊派" },
+  { frontLetter: "P", backLetter: "A", frontLabel: "計画・管理派", backLabel: "衝動・刺激派" },
+  { frontLetter: "F", backLetter: "D", frontLabel: "効率・タイパ派", backLabel: "こだわり・美的派" },
+  { frontLetter: "C", backLetter: "S", frontLabel: "安定・タフ派", backLabel: "繊細・ケア派" }
+];
+
 // 画面上のDOM要素をまとめて保持しておくオブジェクト（init内で取得する）
 let elements = {};
 
@@ -50,6 +59,7 @@ function init() {
   currentDiagnosisResult = { typeCode: typeCode, personality: personality, sake: sake };
 
   renderResult(typeCode, personality, sake);
+  renderAxisBars(resultData.scores);
   renderAnsweredQuestions(resultData.answeredQuestions);
   showResultContainer();
 }
@@ -69,6 +79,8 @@ function cacheDomElements() {
     sakeBreweryText: document.getElementById("sakeBreweryText"),
     sakeAreaText: document.getElementById("sakeAreaText"),
     restartLink: document.getElementById("restartLink"),
+    axisSection: document.getElementById("axisSection"),
+    axisBars: document.getElementById("axisBars"),
     answersSection: document.getElementById("answersSection"),
     answersList: document.getElementById("answersList")
   };
@@ -157,6 +169,89 @@ function renderTypeImage(typeCode, typeName) {
   elements.typeImage.onerror = () => {
     elements.typeImage.hidden = true;
   };
+}
+
+// ------------------------------------------------------------
+// 4軸スコアのパーセンテージ表示
+// ------------------------------------------------------------
+
+// 4軸それぞれのスコアバーを描画する
+// 古い形式のデータ（スコアを保存していない結果）が残っている場合はセクションごと非表示にする
+function renderAxisBars(scores) {
+  if (!scores || typeof scores !== "object") {
+    elements.axisSection.hidden = true;
+    return;
+  }
+
+  elements.axisBars.innerHTML = "";
+
+  AXIS_DEFINITIONS.forEach((axis, index) => {
+    const barElement = createAxisBarElement(axis, scores, index);
+    if (barElement) {
+      elements.axisBars.appendChild(barElement);
+    }
+  });
+
+  elements.axisSection.hidden = false;
+}
+
+// 1軸分のスコアバー（「◯％ ◯◯型」の見出し＋バー＋両端ラベル）のDOM要素を作成する
+function createAxisBarElement(axis, scores, index) {
+  const frontScore = scores[axis.frontLetter];
+  const backScore = scores[axis.backLetter];
+  const totalScore = frontScore + backScore;
+
+  // スコアが数値として存在しない・合計が0以下の場合は描画しない（防御的チェック）
+  if (typeof frontScore !== "number" || typeof backScore !== "number" || totalScore <= 0) {
+    return null;
+  }
+
+  // バーの左端＝前半文字（0%）、右端＝後半文字（100%）としたときの、つまみの位置
+  const knobPercent = (backScore / totalScore) * 100;
+
+  // 優勢な方（スコアが高い方）の文字・ラベル・パーセンテージを見出しに表示する
+  const isBackDominant = backScore >= frontScore;
+  const dominantLabel = isBackDominant ? axis.backLabel : axis.frontLabel;
+  const dominantPercent = Math.round(isBackDominant ? knobPercent : 100 - knobPercent);
+
+  const container = document.createElement("div");
+  container.className = "axis-bar axis-bar-" + (index + 1);
+
+  const summary = document.createElement("p");
+  summary.className = "axis-bar-summary";
+
+  const percentText = document.createElement("span");
+  percentText.className = "axis-bar-percent";
+  percentText.textContent = dominantPercent + "%";
+
+  summary.appendChild(percentText);
+  summary.appendChild(document.createTextNode(" " + dominantLabel));
+
+  const track = document.createElement("div");
+  track.className = "axis-bar-track";
+
+  const knob = document.createElement("div");
+  knob.className = "axis-bar-knob";
+  knob.style.left = knobPercent + "%";
+  track.appendChild(knob);
+
+  const labels = document.createElement("div");
+  labels.className = "axis-bar-labels";
+
+  const frontLabelText = document.createElement("span");
+  frontLabelText.textContent = axis.frontLabel;
+
+  const backLabelText = document.createElement("span");
+  backLabelText.textContent = axis.backLabel;
+
+  labels.appendChild(frontLabelText);
+  labels.appendChild(backLabelText);
+
+  container.appendChild(summary);
+  container.appendChild(track);
+  container.appendChild(labels);
+
+  return container;
 }
 
 // 全32問の質問文と選択した回答の一覧を描画する

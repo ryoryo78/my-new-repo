@@ -519,6 +519,72 @@ h1, h2, p {
   margin-bottom: 4px !important;
 }
 
+/* 4軸スコアのパーセンテージ表示 */
+
+.axis-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.axis-bar-1 {
+  --axis-color: #3b82c4;
+}
+
+.axis-bar-2 {
+  --axis-color: #d9a441;
+}
+
+.axis-bar-3 {
+  --axis-color: #3fa66b;
+}
+
+.axis-bar-4 {
+  --axis-color: #a25fd1;
+}
+
+.axis-bar-summary {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+.axis-bar-percent {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--axis-color);
+}
+
+.axis-bar-track {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  border-radius: var(--radius-button);
+  background-color: var(--axis-color);
+}
+
+.axis-bar-knob {
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 4px solid var(--axis-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+}
+
+.axis-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
 /* SNSシェア画像生成エリア */
 
 .share-description {
