@@ -808,7 +808,7 @@ h1, h2, p {
 }
 
 /* ------------------------------------------------------------
-   レスポンシブ対応（タブレット・PCなど広い画面向けの調整）
+   レスポンシブ対応：タブレット幅（600px以上）
    ------------------------------------------------------------ */
 
 @media (min-width: 600px) {
@@ -822,5 +822,85 @@ h1, h2, p {
 
   .top-container {
     padding: 48px 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   レスポンシブ対応：PC幅（900px以上）
+   スマートフォンの縦長レイアウトをそのまま引き伸ばすのではなく、
+   読みやすさ・押しやすさを優先して余白・文字サイズ・並び方を調整する
+   ------------------------------------------------------------ */
+
+@media (min-width: 900px) {
+  .card {
+    padding: 48px 48px;
+  }
+
+  /* 質問画面：カードを少し広げ、質問文・ボタン・余白を大きくして読みやすく押しやすくする */
+
+  .quiz-container {
+    max-width: 640px;
+  }
+
+  .questions-list {
+    gap: 28px;
+  }
+
+  .question-item-text {
+    font-size: 1.15rem;
+  }
+
+  .question-item-answers {
+    gap: 72px;
+  }
+
+  .answer-button {
+    width: 76px;
+    height: 76px;
+    font-size: 2.1rem;
+    border-width: 4px;
+  }
+
+  .next-button {
+    width: auto;
+    min-width: 300px;
+    max-width: 380px;
+    font-size: 1.15rem;
+    padding: 16px 32px;
+  }
+
+  /* 結果画面：情報セクションを2列に並べ、縦に長くなりすぎないようにする */
+
+  .result-container {
+    max-width: 760px;
+  }
+
+  .result-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 8px 32px;
+  }
+
+  .result-info-grid .result-section {
+    margin-bottom: 0;
+  }
+
+  .axis-bars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+  }
+
+  /* 「もう一度診断する」「画像を保存する」ボタンは、幅いっぱいに引き伸ばさず中央に程よい大きさで表示する */
+  .restart-area .primary-button,
+  .download-button {
+    width: auto;
+    min-width: 260px;
+    max-width: 360px;
+  }
+
+  .restart-area {
+    text-align: center;
   }
 }
