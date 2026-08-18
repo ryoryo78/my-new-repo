@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="css/style.css">
   <!-- questionsData.jsで質問データ（32問）を定義しているため、questions.jsより先に読み込む -->
   <script src="js/questionsData.js" defer></script>
+  <!-- budoux-ja要素・setPhraseText()を使うため、questions.jsより先に読み込む -->
+  <script src="js/vendor/budoux-ja.min.js" defer></script>
+  <script src="js/text-utils.js" defer></script>
   <script src="js/questions.js" defer></script>
   <script src="js/nav.js" defer></script>
 </head>
@@ -19,10 +22,10 @@
       <span class="nav-toggle-icon" aria-hidden="true"></span>
     </button>
     <div id="navMenu" class="nav-menu" hidden>
-      <a href="index.html" class="top-nav-link">ホーム</a>
-      <a href="questions.html" class="top-nav-link active">診断</a>
-      <a href="result.html" class="top-nav-link">診断結果</a>
-      <a href="types.html" class="top-nav-link">タイプ一覧</a>
+      <a href="index.html" class="top-nav-link"><budoux-ja>ホーム</budoux-ja></a>
+      <a href="questions.html" class="top-nav-link active"><budoux-ja>診断</budoux-ja></a>
+      <a href="result.html" class="top-nav-link"><budoux-ja>診断結果</budoux-ja></a>
+      <a href="types.html" class="top-nav-link"><budoux-ja>タイプ一覧</budoux-ja></a>
     </div>
   </nav>
 
@@ -30,7 +33,7 @@
 
     <!-- 質問データが読み込めない場合にのみ表示するエラー表示エリア -->
     <div id="errorMessage" class="card error-message" hidden>
-      質問データの読み込みに失敗しました。ページを再読み込みしてください。
+      <budoux-ja>質問データの読み込みに失敗しました。ページを再読み込みしてください。</budoux-ja>
     </div>
 
     <!-- 質問と回答ボタンをまとめた診断本体エリア -->
@@ -49,7 +52,7 @@
 
       <!-- 全問回答するまでは非活性になる「診断結果を見る」ボタン -->
       <div class="submit-area">
-        <button id="submitButton" class="next-button" type="button" disabled>診断結果を見る</button>
+        <button id="submitButton" class="next-button" type="button" disabled><budoux-ja>診断結果を見る</budoux-ja></button>
         <p id="unansweredHint" class="unanswered-hint" hidden></p>
       </div>
 

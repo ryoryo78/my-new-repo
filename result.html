@@ -7,8 +7,11 @@
   <title>日本酒パーソナリティ診断 | 結果</title>
   <link rel="stylesheet" href="css/style.css">
   <!-- data.jsの16タイプデータを使うため、result.jsより先に読み込む -->
+  <!-- budoux-ja要素・setPhraseText()を使うため、result.jsより先に読み込む -->
   <!-- share.jsはresult.jsが取得した診断結果（currentDiagnosisResult）を参照するため、result.jsの後に読み込む -->
   <script src="js/data.js" defer></script>
+  <script src="js/vendor/budoux-ja.min.js" defer></script>
+  <script src="js/text-utils.js" defer></script>
   <script src="js/result.js" defer></script>
   <script src="js/share.js" defer></script>
   <script src="js/nav.js" defer></script>
@@ -21,10 +24,10 @@
       <span class="nav-toggle-icon" aria-hidden="true"></span>
     </button>
     <div id="navMenu" class="nav-menu" hidden>
-      <a href="index.html" class="top-nav-link">ホーム</a>
-      <a href="questions.html" class="top-nav-link">診断</a>
-      <a href="result.html" class="top-nav-link active">診断結果</a>
-      <a href="types.html" class="top-nav-link">タイプ一覧</a>
+      <a href="index.html" class="top-nav-link"><budoux-ja>ホーム</budoux-ja></a>
+      <a href="questions.html" class="top-nav-link"><budoux-ja>診断</budoux-ja></a>
+      <a href="result.html" class="top-nav-link active"><budoux-ja>診断結果</budoux-ja></a>
+      <a href="types.html" class="top-nav-link"><budoux-ja>タイプ一覧</budoux-ja></a>
     </div>
   </nav>
 
@@ -32,8 +35,8 @@
 
     <!-- 診断結果が取得できない・該当タイプが見つからない場合に表示するエラーエリア -->
     <div id="errorContainer" class="card error-message" hidden>
-      <p>診断結果を取得できませんでした。お手数ですが、最初からもう一度診断を行ってください。</p>
-      <a href="index.html" class="primary-button">トップ画面に戻る</a>
+      <p><budoux-ja>診断結果を取得できませんでした。お手数ですが、最初からもう一度診断を行ってください。</budoux-ja></p>
+      <a href="index.html" class="primary-button"><budoux-ja>トップ画面に戻る</budoux-ja></a>
     </div>
 
     <!-- 診断結果の表示エリア -->
@@ -45,29 +48,29 @@
 
       <!-- 4軸それぞれのスコアを％表示するエリア（中身はresult.jsがscoresデータから動的に生成する） -->
       <section id="axisSection" class="result-section axis-section" hidden>
-        <h2>診断スコア</h2>
+        <h2><budoux-ja>診断スコア</budoux-ja></h2>
         <div id="axisBars" class="axis-bars"></div>
       </section>
 
       <!-- PC幅では2列に並ぶ情報グリッド（性格・食事の傾向・好む食べ物・おすすめの日本酒） -->
       <div class="result-info-grid">
         <section class="result-section">
-          <h2>性格</h2>
+          <h2><budoux-ja>性格</budoux-ja></h2>
           <p id="descriptionText"></p>
         </section>
 
         <section class="result-section">
-          <h2>食事の傾向</h2>
+          <h2><budoux-ja>食事の傾向</budoux-ja></h2>
           <p id="dietDescriptionText"></p>
         </section>
 
         <section class="result-section">
-          <h2>好む食べ物</h2>
+          <h2><budoux-ja>好む食べ物</budoux-ja></h2>
           <ul id="favoriteFoodsList" class="foods-list"></ul>
         </section>
 
         <section class="result-section sake-section">
-          <h2>おすすめの日本酒</h2>
+          <h2><budoux-ja>おすすめの日本酒</budoux-ja></h2>
           <p id="sakeBrandText" class="sake-brand"></p>
           <p id="sakeBreweryText"></p>
           <p id="sakeAreaText"></p>
@@ -76,15 +79,15 @@
 
       <!-- SNSシェア画像の生成エリア：Canvas APIでシェア用画像を作り、ワンタップでOSの共有画面からSNSへシェアする -->
       <section class="result-section share-section">
-        <h2>この結果をシェアする</h2>
-        <p class="share-description">ワンタップでInstagramやXにシェアしよう！</p>
+        <h2><budoux-ja>この結果をシェアする</budoux-ja></h2>
+        <p class="share-description"><budoux-ja>ワンタップでInstagramやXにシェアしよう！</budoux-ja></p>
 
         <div class="share-buttons">
           <button type="button" id="shareOnInstagramButton" class="share-button share-button-instagram">
-            Instagramでシェア
+            <budoux-ja>Instagramでシェア</budoux-ja>
           </button>
           <button type="button" id="shareOnXButton" class="share-button share-button-x">
-            Xでシェア
+            <budoux-ja>Xでシェア</budoux-ja>
           </button>
         </div>
 
@@ -92,15 +95,15 @@
         <div id="sharePreviewArea" class="share-preview-area" hidden>
           <p id="sharePreviewCaption" class="share-preview-caption"></p>
           <canvas id="shareCanvas" class="share-canvas"></canvas>
-          <p class="share-fallback-note">お使いのブラウザは直接シェアに対応していないため、画像を保存してSNSアプリから投稿してください。</p>
+          <p class="share-fallback-note"><budoux-ja>お使いのブラウザは直接シェアに対応していないため、画像を保存してSNSアプリから投稿してください。</budoux-ja></p>
           <button type="button" id="downloadShareImageButton" class="primary-button download-button">
-            画像を保存する
+            <budoux-ja>画像を保存する</budoux-ja>
           </button>
         </div>
       </section>
 
       <div class="restart-area">
-        <a href="index.html" id="restartLink" class="primary-button">もう一度診断する</a>
+        <a href="index.html" id="restartLink" class="primary-button"><budoux-ja>もう一度診断する</budoux-ja></a>
       </div>
 
     </div>

@@ -68,7 +68,7 @@ function createTypeCardElement(typeCode) {
 
   const nickname = document.createElement("p");
   nickname.className = "type-card-nickname";
-  nickname.textContent = personality.typeName;
+  setPhraseText(nickname, personality.typeName);
 
   const code = document.createElement("p");
   code.className = "type-card-code";
@@ -90,18 +90,20 @@ function openTypeDetailModal(typeCode) {
   const personality = personalityTypes[typeCode];
   const sake = sakeRecommendations[typeCode];
 
+  // タイプコード（例：EPFC）はアルファベットの略号なので、文節区切りの対象外とする
   typesElements.modalTypeCode.textContent = typeCode;
   typesElements.modalTypeImage.src = "images/" + typeCode.toLowerCase() + ".png";
   typesElements.modalTypeImage.alt = personality.typeName;
-  typesElements.modalTypeName.textContent = personality.typeName;
-  typesElements.modalDescription.textContent = personality.description;
-  typesElements.modalDietDescription.textContent = personality.dietDescription;
+
+  setPhraseText(typesElements.modalTypeName, personality.typeName);
+  setPhraseText(typesElements.modalDescription, personality.description);
+  setPhraseText(typesElements.modalDietDescription, personality.dietDescription);
 
   renderModalFavoriteFoods(personality.favoriteFoods);
 
-  typesElements.modalSakeBrand.textContent = "銘柄：" + sake.brandName;
-  typesElements.modalSakeBrewery.textContent = "酒蔵：" + sake.brewery;
-  typesElements.modalSakeArea.textContent = "産地：" + sake.area;
+  setPhraseText(typesElements.modalSakeBrand, "銘柄：" + sake.brandName);
+  setPhraseText(typesElements.modalSakeBrewery, "酒蔵：" + sake.brewery);
+  setPhraseText(typesElements.modalSakeArea, "産地：" + sake.area);
 
   typesElements.modal.hidden = false;
 }
@@ -112,7 +114,7 @@ function renderModalFavoriteFoods(favoriteFoods) {
 
   favoriteFoods.forEach((food) => {
     const listItem = document.createElement("li");
-    listItem.textContent = food;
+    setPhraseText(listItem, food);
     typesElements.modalFavoriteFoods.appendChild(listItem);
   });
 }

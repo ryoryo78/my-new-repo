@@ -128,7 +128,7 @@ function createQuestionItemElement(question, questionIndex) {
 
   const questionText = document.createElement("p");
   questionText.className = "question-item-text";
-  questionText.textContent = question.question;
+  setPhraseText(questionText, question.question);
 
   const answerArea = document.createElement("div");
   answerArea.className = "question-item-answers";
@@ -253,8 +253,10 @@ function findUnansweredQuestionIndexes() {
 // 未回答の質問に警告表示を付け、最初の未回答質問までスクロールする
 function showUnansweredWarning(unansweredIndexes) {
   elements.unansweredHint.hidden = false;
-  elements.unansweredHint.textContent =
-    "まだ回答していない質問が" + unansweredIndexes.length + "問あります。上にスクロールして回答してください。";
+  setPhraseText(
+    elements.unansweredHint,
+    "まだ回答していない質問が" + unansweredIndexes.length + "問あります。上にスクロールして回答してください。"
+  );
 
   unansweredIndexes.forEach((index) => {
     const questionItem = elements.questionsList.querySelector('.question-item[data-question-index="' + index + '"]');

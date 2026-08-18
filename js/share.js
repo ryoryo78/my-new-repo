@@ -336,8 +336,10 @@ function drawMultilineCenteredText(context, lines, centerX, centerY, lineHeight)
 // 生成した画像のプレビューエリアを表示し、キャプションを更新する
 function showSharePreview(format) {
   shareElements.previewArea.hidden = false;
-  shareElements.previewCaption.textContent =
-    "プレビュー：" + format.label + "（" + format.width + "×" + format.height + "px）";
+  setPhraseText(
+    shareElements.previewCaption,
+    "プレビュー：" + format.label + "（" + format.width + "×" + format.height + "px）"
+  );
 }
 
 // ------------------------------------------------------------

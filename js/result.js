@@ -125,17 +125,19 @@ function isResultExpired(savedAt) {
 
 // タイプコード・性格データ・日本酒データを画面に反映する
 function renderResult(typeCode, personality, sake) {
+  // タイプコード（例：EPFC）はアルファベットの略号なので、文節区切りの対象外とする
   elements.typeCodeText.textContent = typeCode;
-  elements.typeNameText.textContent = personality.typeName;
-  elements.descriptionText.textContent = personality.description;
-  elements.dietDescriptionText.textContent = personality.dietDescription;
+
+  setPhraseText(elements.typeNameText, personality.typeName);
+  setPhraseText(elements.descriptionText, personality.description);
+  setPhraseText(elements.dietDescriptionText, personality.dietDescription);
 
   renderFavoriteFoods(personality.favoriteFoods);
   renderTypeImage(typeCode, personality.typeName);
 
-  elements.sakeBrandText.textContent = "銘柄：" + sake.brandName;
-  elements.sakeBreweryText.textContent = "酒蔵：" + sake.brewery;
-  elements.sakeAreaText.textContent = "産地：" + sake.area;
+  setPhraseText(elements.sakeBrandText, "銘柄：" + sake.brandName);
+  setPhraseText(elements.sakeBreweryText, "酒蔵：" + sake.brewery);
+  setPhraseText(elements.sakeAreaText, "産地：" + sake.area);
 }
 
 // 好む食べ物の配列を、リスト（<li>要素）として描画する
@@ -144,7 +146,7 @@ function renderFavoriteFoods(favoriteFoods) {
 
   favoriteFoods.forEach((food) => {
     const listItem = document.createElement("li");
-    listItem.textContent = food;
+    setPhraseText(listItem, food);
     elements.favoriteFoodsList.appendChild(listItem);
   });
 }
@@ -214,8 +216,11 @@ function createAxisBarElement(axis, scores, index) {
   percentText.className = "axis-bar-percent";
   percentText.textContent = dominantPercent + "%";
 
+  const labelText = document.createElement("span");
+  setPhraseText(labelText, " " + dominantLabel);
+
   summary.appendChild(percentText);
-  summary.appendChild(document.createTextNode(" " + dominantLabel));
+  summary.appendChild(labelText);
 
   const track = document.createElement("div");
   track.className = "axis-bar-track";
@@ -229,10 +234,10 @@ function createAxisBarElement(axis, scores, index) {
   labels.className = "axis-bar-labels";
 
   const frontLabelText = document.createElement("span");
-  frontLabelText.textContent = axis.frontLabel;
+  setPhraseText(frontLabelText, axis.frontLabel);
 
   const backLabelText = document.createElement("span");
-  backLabelText.textContent = axis.backLabel;
+  setPhraseText(backLabelText, axis.backLabel);
 
   labels.appendChild(frontLabelText);
   labels.appendChild(backLabelText);

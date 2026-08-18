@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日本酒パーソナリティ診断</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- budoux-ja要素を使うため、テキストを含む他のスクリプトより先に読み込む -->
+  <script src="js/vendor/budoux-ja.min.js" defer></script>
   <script src="js/nav.js" defer></script>
 </head>
 <body>
@@ -16,17 +18,17 @@
       <span class="nav-toggle-icon" aria-hidden="true"></span>
     </button>
     <div id="navMenu" class="nav-menu" hidden>
-      <a href="index.html" class="top-nav-link active">ホーム</a>
-      <a href="questions.html" class="top-nav-link">診断</a>
-      <a href="result.html" class="top-nav-link">診断結果</a>
-      <a href="types.html" class="top-nav-link">タイプ一覧</a>
+      <a href="index.html" class="top-nav-link active"><budoux-ja>ホーム</budoux-ja></a>
+      <a href="questions.html" class="top-nav-link"><budoux-ja>診断</budoux-ja></a>
+      <a href="result.html" class="top-nav-link"><budoux-ja>診断結果</budoux-ja></a>
+      <a href="types.html" class="top-nav-link"><budoux-ja>タイプ一覧</budoux-ja></a>
     </div>
   </nav>
 
   <main class="page-wrapper top-page">
     <div class="card top-container">
 
-      <h1 class="app-title">日本酒パーソナリティ診断</h1>
+      <h1 class="app-title"><budoux-ja>日本酒パーソナリティ診断</budoux-ja></h1>
 
       <!-- 16タイプのキャラクター画像が横に流れるように表示するエリア（装飾のためスクリーンリーダーには読み上げさせない） -->
       <div class="character-scroller" aria-hidden="true">
@@ -68,12 +70,12 @@
       </div>
 
       <p class="app-description">
-        全32問のかんたんな質問に答えるだけで、<br>
-        あなたの性格・食生活のタイプを16種類の中から診断。 <br>
-        あなたにぴったりの日本酒銘柄もあわせてご紹介します。
+        <budoux-ja>全32問のかんたんな質問に答えるだけで、</budoux-ja><br>
+        <budoux-ja>あなたの性格・食生活のタイプを16種類の中から診断。</budoux-ja> <br>
+        <budoux-ja>あなたにぴったりの日本酒銘柄もあわせてご紹介します。</budoux-ja>
       </p>
 
-      <a href="questions.html" id="startButton" class="primary-button start-button">診断をはじめる</a>
+      <a href="questions.html" id="startButton" class="primary-button start-button"><budoux-ja>診断をはじめる</budoux-ja></a>
 
     </div>
   </main>
