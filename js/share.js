@@ -240,7 +240,7 @@ function drawContent(context, card, resultData, characterImage) {
   context.fillText("おすすめの日本酒", centerX, card.y + card.height * 0.64);
 
   // おすすめの日本酒銘柄名（長い場合は折り返す）
-  context.fillStyle = "#e85d2a";
+  context.fillStyle = "#c8922a";
   context.font = "bold " + Math.round(baseFontSize * 0.055) + "px " + FONT_FAMILY;
   const brandLines = wrapTextLines(context, resultData.sake.brandName, card.width * 0.82);
   drawMultilineCenteredText(context, brandLines, centerX, card.y + card.height * 0.74, baseFontSize * 0.07);
@@ -261,27 +261,27 @@ function drawCharacterImage(context, image, centerX, centerY, boxSize) {
   context.drawImage(image, centerX - drawWidth / 2, centerY - drawHeight / 2, drawWidth, drawHeight);
 }
 
-// タイプコードを、丸い背景（バッジ）付きで描画する
+// タイプコードを、紺×金のバッジ付きで描画する（result.html側の.type-codeバッジと統一感を持たせる）
 function drawTypeCodeBadge(context, centerX, centerY, baseFontSize, typeCode) {
   context.font = "bold " + Math.round(baseFontSize * 0.055) + "px " + FONT_FAMILY;
 
-  const paddingX = baseFontSize * 0.05;
+  const paddingX = baseFontSize * 0.06;
   const textWidth = context.measureText(typeCode).width;
   const badgeWidth = textWidth + paddingX * 2;
-  const badgeHeight = baseFontSize * 0.09;
+  const badgeHeight = baseFontSize * 0.1;
 
-  context.fillStyle = "#ffe4d1";
-  drawRoundedRectPath(
-    context,
-    centerX - badgeWidth / 2,
-    centerY - badgeHeight / 2,
-    badgeWidth,
-    badgeHeight,
-    badgeHeight / 2
-  );
+  const badgeX = centerX - badgeWidth / 2;
+  const badgeY = centerY - badgeHeight / 2;
+
+  const badgeGradient = context.createLinearGradient(badgeX, badgeY, badgeX + badgeWidth, badgeY + badgeHeight);
+  badgeGradient.addColorStop(0, "#1a1a3e");
+  badgeGradient.addColorStop(1, "#30316f");
+
+  context.fillStyle = badgeGradient;
+  drawRoundedRectPath(context, badgeX, badgeY, badgeWidth, badgeHeight, badgeHeight / 2);
   context.fill();
 
-  context.fillStyle = "#e85d2a";
+  context.fillStyle = "#e8b84a";
   context.fillText(typeCode, centerX, centerY);
 }
 
