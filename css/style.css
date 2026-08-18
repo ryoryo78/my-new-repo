@@ -668,9 +668,22 @@ h1, h2, p {
 
 .types-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
   margin-bottom: 28px;
+}
+
+/* 横幅に応じて、キャラクター画像の列数が1列／2列／4列のいずれかになるようにする */
+@media (min-width: 480px) {
+  .types-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .types-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .type-card {
