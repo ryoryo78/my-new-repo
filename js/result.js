@@ -8,13 +8,6 @@
 const RESULT_STORAGE_KEY = "sakePersonalityResult"; // questions.js側と揃えるストレージキー
 const RESULT_EXPIRY_MS = 24 * 60 * 60 * 1000; // 診断結果をlocalStorageに保持しておく期間（24時間）
 
-// 回答一覧に表示する記号と色分け用クラスの対応
-// （questions.js側の回答ラベル「当てはまる／当てはまらない」を、○×記号に変換して表示する）
-const ANSWER_DISPLAY = {
-  "当てはまる": { symbol: "○", className: "answer-record-answer-agree" },
-  "当てはまらない": { symbol: "×", className: "answer-record-answer-disagree" }
-};
-
 // 4軸それぞれの前半文字（左側）・後半文字（右側）と、その説明ラベルの対応
 // questions.js側の判定ロジック（judgeAxis）と対になる定義
 const AXIS_DEFINITIONS = [
@@ -60,7 +53,6 @@ function init() {
 
   renderResult(typeCode, personality, sake);
   renderAxisBars(resultData.scores);
-  renderAnsweredQuestions(resultData.answeredQuestions);
   showResultContainer();
 }
 
@@ -80,9 +72,7 @@ function cacheDomElements() {
     sakeAreaText: document.getElementById("sakeAreaText"),
     restartLink: document.getElementById("restartLink"),
     axisSection: document.getElementById("axisSection"),
-    axisBars: document.getElementById("axisBars"),
-    answersSection: document.getElementById("answersSection"),
-    answersList: document.getElementById("answersList")
+    axisBars: document.getElementById("axisBars")
   };
 }
 
@@ -252,47 +242,6 @@ function createAxisBarElement(axis, scores, index) {
   container.appendChild(labels);
 
   return container;
-}
-
-// 全32問の質問文と選択した回答の一覧を描画する
-// 古い形式のデータ（回答一覧を保存していない結果）が残っている場合はセクションごと非表示にする
-function renderAnsweredQuestions(answeredQuestions) {
-  if (!Array.isArray(answeredQuestions) || answeredQuestions.length === 0) {
-    elements.answersSection.hidden = true;
-    return;
-  }
-
-  elements.answersList.innerHTML = "";
-
-  answeredQuestions.forEach((item) => {
-    const listItem = createAnswerRecordElement(item);
-    elements.answersList.appendChild(listItem);
-  });
-
-  elements.answersSection.hidden = false;
-}
-
-// 1問分の「質問文＋選択した回答」のDOM要素を作成する
-function createAnswerRecordElement(item) {
-  const listItem = document.createElement("li");
-  listItem.className = "answer-record-item";
-
-  const questionText = document.createElement("p");
-  questionText.className = "answer-record-question";
-  questionText.textContent = "Q" + item.questionNumber + ". " + item.questionText;
-
-  // 回答ラベル（当てはまる／当てはまらない）を○×記号に変換して表示する
-  const answerDisplay = ANSWER_DISPLAY[item.answerLabel];
-
-  const answerText = document.createElement("p");
-  answerText.className = "answer-record-answer" + (answerDisplay ? " " + answerDisplay.className : "");
-  answerText.textContent = answerDisplay ? answerDisplay.symbol : item.answerLabel;
-  answerText.setAttribute("aria-label", "回答：" + item.answerLabel);
-
-  listItem.appendChild(questionText);
-  listItem.appendChild(answerText);
-
-  return listItem;
 }
 
 // エラーメッセージを表示し、結果表示エリアは非表示にする

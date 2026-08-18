@@ -666,52 +666,6 @@ h1, h2, p {
   margin-top: 8px;
 }
 
-/* 回答一覧（全32問の質問文と選択した回答） */
-
-.answers-section {
-  margin-top: 36px;
-}
-
-.answers-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.answer-record-item {
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-primary-light);
-}
-
-.answer-record-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.answer-record-question {
-  margin: 0 0 4px;
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-.answer-record-answer {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.answer-record-answer-agree {
-  color: var(--color-maru);
-}
-
-.answer-record-answer-disagree {
-  color: var(--color-batsu);
-}
-
 /* ------------------------------------------------------------
    タイプ一覧画面（types.html）
    ------------------------------------------------------------ */

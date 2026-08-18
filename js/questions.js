@@ -273,9 +273,8 @@ function showUnansweredWarning(unansweredIndexes) {
 function finishQuiz() {
   const axisScores = calculateAxisScores();
   const personalityTypeCode = determinePersonalityType(axisScores);
-  const answeredQuestions = buildAnsweredQuestionsSummary();
 
-  saveResultToLocalStorage(personalityTypeCode, axisScores, answeredQuestions);
+  saveResultToLocalStorage(personalityTypeCode, axisScores);
 
   window.location.href = "result.html";
 }
@@ -323,25 +322,14 @@ function determinePersonalityType(scores) {
 // 結果画面への受け渡し
 // ------------------------------------------------------------
 
-// 全32問について「質問文」と「選択した回答」をまとめた一覧を作成する
-// result.html側で回答一覧として表示するために使う
-function buildAnsweredQuestionsSummary() {
-  return questionList.map((question, index) => ({
-    questionNumber: index + 1,
-    questionText: question.question,
-    answerLabel: ANSWER_LABELS[userAnswers[index]]
-  }));
-}
-
-// 診断結果（タイプコード・軸ごとのスコア・回答一覧）をlocalStorageに保存する
-// result.html側はこのキーを読み取ってタイプ判定結果や回答一覧を表示する
+// 診断結果（タイプコード・軸ごとのスコア）をlocalStorageに保存する
+// result.html側はこのキーを読み取ってタイプ判定結果を表示する
 // sessionStorageではなくlocalStorageを使うことで、タブやブラウザを閉じた後も
 // 一定期間（result.js側のRESULT_EXPIRY_MSで定義）結果を保持できるようにしている
-function saveResultToLocalStorage(typeCode, scores, answeredQuestions) {
+function saveResultToLocalStorage(typeCode, scores) {
   const resultData = {
     typeCode: typeCode,
     scores: scores,
-    answeredQuestions: answeredQuestions,
     savedAt: Date.now() // 保存日時。result.js側で保持期限切れかどうかの判定に使う
   };
 
