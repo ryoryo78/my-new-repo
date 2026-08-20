@@ -154,17 +154,18 @@ function drawShareImage(canvas, format, resultData, characterImage) {
   drawContent(context, card, resultData, characterImage);
 }
 
-// 背景のグラデーションを描画する
+// 背景のグラデーションを描画する（Webページ本体の紺の背景と統一する）
 function drawBackground(context, width, height) {
-  const gradient = context.createLinearGradient(0, 0, 0, height);
-  gradient.addColorStop(0, "#fff1e2");
-  gradient.addColorStop(1, "#ffcda0");
+  const gradient = context.createLinearGradient(0, 0, width * 0.3, height);
+  gradient.addColorStop(0, "#30316f");
+  gradient.addColorStop(0.65, "#1a1a3e");
 
   context.fillStyle = gradient;
   context.fillRect(0, 0, width, height);
 }
 
 // コンテンツを載せる白い角丸カードを描画し、カードの座標・サイズを返す
+// Webページの.card（白背景＋金の縁取り）と統一したデザインにする
 function drawCard(context, width, height) {
   const marginX = width * 0.06;
   const marginY = height * 0.06;
@@ -177,7 +178,7 @@ function drawCard(context, width, height) {
   const cornerRadius = Math.min(card.width, card.height) * 0.06;
 
   context.save();
-  context.shadowColor = "rgba(232, 93, 42, 0.25)";
+  context.shadowColor = "rgba(200, 146, 42, 0.35)";
   context.shadowBlur = width * 0.03;
   context.shadowOffsetY = height * 0.01;
 
@@ -185,6 +186,11 @@ function drawCard(context, width, height) {
   drawRoundedRectPath(context, card.x, card.y, card.width, card.height, cornerRadius);
   context.fill();
   context.restore();
+
+  context.strokeStyle = "#e8b84a";
+  context.lineWidth = Math.max(2, Math.min(card.width, card.height) * 0.004);
+  drawRoundedRectPath(context, card.x, card.y, card.width, card.height, cornerRadius);
+  context.stroke();
 
   return card;
 }
@@ -203,6 +209,7 @@ function drawRoundedRectPath(context, x, y, width, height, radius) {
 // カード内にタイトル・タイプ情報・日本酒情報を描画する
 // カードの高さに対する割合（0〜1）で各要素の縦位置を決めることで、
 // 縦長（Instagram）・横長（X）どちらのフォーマットでも崩れにくいようにしている
+// キャラクター画像を大きく表示する分、他の要素の位置を詰めて配置している
 function drawContent(context, card, resultData, characterImage) {
   const centerX = card.x + card.width / 2;
   const baseFontSize = Math.min(card.width, card.height);
@@ -210,40 +217,41 @@ function drawContent(context, card, resultData, characterImage) {
   context.textAlign = "center";
   context.textBaseline = "middle";
 
-  // アプリのロゴ・コピー
-  context.fillStyle = "#e85d2a";
+  // アプリのロゴ・コピー（Webページのタイトルと同じ紺色にする）
+  context.fillStyle = "#1a1a3e";
   context.font = "bold " + Math.round(baseFontSize * 0.05) + "px " + FONT_FAMILY;
-  context.fillText("日本酒パーソナリティ診断", centerX, card.y + card.height * 0.1);
+  context.fillText("日本酒パーソナリティ診断", centerX, card.y + card.height * 0.06);
 
   // タイプごとのキャラクター画像（読み込めなかった場合は絵文字で代替表示する）
+  // 比率を大きくして、シェア画像の主役として見せる
   if (characterImage) {
-    drawCharacterImage(context, characterImage, centerX, card.y + card.height * 0.23, card.height * 0.16);
+    drawCharacterImage(context, characterImage, centerX, card.y + card.height * 0.24, card.height * 0.22);
   } else {
-    context.font = Math.round(baseFontSize * 0.14) + "px sans-serif";
-    context.fillText("🍶", centerX, card.y + card.height * 0.23);
+    context.font = Math.round(baseFontSize * 0.2) + "px sans-serif";
+    context.fillText("🍶", centerX, card.y + card.height * 0.24);
   }
 
   // タイプコード（バッジ風の表示）
-  drawTypeCodeBadge(context, centerX, card.y + card.height * 0.38, baseFontSize, resultData.typeCode);
+  drawTypeCodeBadge(context, centerX, card.y + card.height * 0.44, baseFontSize, resultData.typeCode);
 
   // タイプ名
   context.fillStyle = "#4a3f35";
   context.font = "bold " + Math.round(baseFontSize * 0.09) + "px " + FONT_FAMILY;
-  context.fillText(resultData.personality.typeName, centerX, card.y + card.height * 0.48);
+  context.fillText(resultData.personality.typeName, centerX, card.y + card.height * 0.54);
 
   // 区切り線
-  drawDividerLine(context, centerX, card.y + card.height * 0.56, card.width * 0.4);
+  drawDividerLine(context, centerX, card.y + card.height * 0.61, card.width * 0.4);
 
   // おすすめの日本酒ラベル
   context.fillStyle = "#8a7f72";
   context.font = Math.round(baseFontSize * 0.038) + "px " + FONT_FAMILY;
-  context.fillText("おすすめの日本酒", centerX, card.y + card.height * 0.64);
+  context.fillText("おすすめの日本酒", centerX, card.y + card.height * 0.68);
 
   // おすすめの日本酒銘柄名（長い場合は折り返す）
   context.fillStyle = "#c8922a";
   context.font = "bold " + Math.round(baseFontSize * 0.055) + "px " + FONT_FAMILY;
   const brandLines = wrapTextLines(context, resultData.sake.brandName, card.width * 0.82);
-  drawMultilineCenteredText(context, brandLines, centerX, card.y + card.height * 0.74, baseFontSize * 0.07);
+  drawMultilineCenteredText(context, brandLines, centerX, card.y + card.height * 0.77, baseFontSize * 0.07);
 
   // フッター（ハッシュタグ）
   context.fillStyle = "#8a7f72";
@@ -287,7 +295,7 @@ function drawTypeCodeBadge(context, centerX, centerY, baseFontSize, typeCode) {
 
 // 中央揃えの水平な区切り線を描画する
 function drawDividerLine(context, centerX, y, lineWidth) {
-  context.strokeStyle = "#ffd9b8";
+  context.strokeStyle = "#f7ecd3";
   context.lineWidth = Math.max(2, lineWidth * 0.01);
   context.beginPath();
   context.moveTo(centerX - lineWidth / 2, y);
