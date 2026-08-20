@@ -41,13 +41,13 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic", "Helvetica Neue", Arial, sans-serif;
-  /* 紺の夜空に金の波紋・星をあしらった背景（images/pattern-bg.svg）。スクロールしても位置が動かないよう固定する */
+  /* 紺地に金の波紋・雲文様・星をあしらった和柄背景（images/pattern-bg.webp）。スクロールしても位置が動かないよう固定する */
   background-color: var(--color-navy);
-  background-image: url("../images/pattern-bg.svg"), linear-gradient(160deg, var(--color-navy-light) 0%, var(--color-navy) 65%);
-  background-repeat: no-repeat, no-repeat;
-  background-size: cover, cover;
-  background-position: center, center;
-  background-attachment: fixed, fixed;
+  background-image: url("../images/pattern-bg.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--color-text);
 }
 
