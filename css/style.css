@@ -536,15 +536,92 @@ h1, h2, p {
   color: var(--color-gold);
 }
 
-.sake-section p {
-  color: #fdf6e8;
+/* 銘柄カードは、幅に余裕があれば自動で横並びになるグリッドにする
+   （1件のときは1枚が幅いっぱいに、2件以上かつ横幅が足りるときは横並びになる） */
+.sake-recommendations-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+/* 1枚1枚を独立したカードとして見せる */
+.sake-recommendation-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(232, 184, 74, 0.35);
+  border-radius: var(--radius-input);
+  padding: 18px 14px;
 }
 
 .sake-brand {
-  font-size: 1.15rem;
+  margin: 0 0 4px;
+  font-size: 1.1rem;
   font-weight: bold;
   color: var(--color-gold);
-  margin-bottom: 4px !important;
+  text-align: center;
+}
+
+.sake-brewery {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #fdf6e8;
+  text-align: center;
+}
+
+.sake-image {
+  display: block;
+  width: 132px;
+  height: auto;
+  margin: 16px auto;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: var(--radius-input);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sake-buttons {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.sake-link-button {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border-radius: var(--radius-button);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sake-link-button:hover {
+  transform: translateY(-2px);
+}
+
+.sake-link-button-homepage {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-gold);
+  border: 1.5px solid var(--color-gold);
+}
+
+.sake-link-button-purchase {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: var(--color-navy);
+  border: 1.5px solid transparent;
+  box-shadow: 0 6px 14px rgba(200, 146, 42, 0.35);
+}
+
+.sake-link-button-purchase:hover {
+  box-shadow: 0 8px 18px rgba(200, 146, 42, 0.45);
 }
 
 /* 4軸スコアのパーセンテージ表示 */
@@ -913,6 +990,13 @@ h1, h2, p {
 
   .result-info-grid .result-section {
     margin-bottom: 0;
+  }
+
+  /* 好む食べ物・おすすめの日本酒は、性格・食事の傾向より内容の分量が大きく変わりやすいため
+     2列のどちらかに詰め込まず、それぞれ単独で幅いっぱいの行にして高さのアンバランスを防ぐ */
+  .foods-section,
+  .sake-section {
+    grid-column: 1 / -1;
   }
 
   .axis-bars {

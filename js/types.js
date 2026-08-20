@@ -26,9 +26,7 @@ function cacheTypesElements() {
     modalDescription: document.getElementById("modalDescription"),
     modalDietDescription: document.getElementById("modalDietDescription"),
     modalFavoriteFoods: document.getElementById("modalFavoriteFoods"),
-    modalSakeBrand: document.getElementById("modalSakeBrand"),
-    modalSakeBrewery: document.getElementById("modalSakeBrewery"),
-    modalSakeArea: document.getElementById("modalSakeArea")
+    modalSakeRecommendationsList: document.getElementById("modalSakeRecommendationsList")
   };
 }
 
@@ -88,7 +86,7 @@ function createTypeCardElement(typeCode) {
 // 指定したタイプの詳細をモーダルに反映して表示する
 function openTypeDetailModal(typeCode) {
   const personality = personalityTypes[typeCode];
-  const sake = sakeRecommendations[typeCode];
+  const sakeList = sakeRecommendations[typeCode];
 
   // タイプコード（例：EPFC）はアルファベットの略号なので、文節区切りの対象外とする
   typesElements.modalTypeCode.textContent = typeCode;
@@ -100,10 +98,7 @@ function openTypeDetailModal(typeCode) {
   setPhraseText(typesElements.modalDietDescription, personality.dietDescription);
 
   renderModalFavoriteFoods(personality.favoriteFoods);
-
-  setPhraseText(typesElements.modalSakeBrand, "銘柄：" + sake.brandName);
-  setPhraseText(typesElements.modalSakeBrewery, "酒蔵：" + sake.brewery);
-  setPhraseText(typesElements.modalSakeArea, "産地：" + sake.area);
+  renderSakeRecommendations(typesElements.modalSakeRecommendationsList, sakeList);
 
   typesElements.modal.hidden = false;
 }

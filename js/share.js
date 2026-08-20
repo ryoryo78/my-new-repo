@@ -248,9 +248,10 @@ function drawContent(context, card, resultData, characterImage) {
   context.fillText("おすすめの日本酒", centerX, card.y + card.height * 0.68);
 
   // おすすめの日本酒銘柄名（長い場合は折り返す）
+  // 複数銘柄ある場合も、シェア画像はシンプルに保つため1件目のみ表示する
   context.fillStyle = "#c8922a";
   context.font = "bold " + Math.round(baseFontSize * 0.055) + "px " + FONT_FAMILY;
-  const brandLines = wrapTextLines(context, resultData.sake.brandName, card.width * 0.82);
+  const brandLines = wrapTextLines(context, resultData.sakeList[0].brandName, card.width * 0.82);
   drawMultilineCenteredText(context, brandLines, centerX, card.y + card.height * 0.77, baseFontSize * 0.07);
 
   // フッター（ハッシュタグ）

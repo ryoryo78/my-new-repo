@@ -8,9 +8,11 @@
   <link rel="stylesheet" href="css/style.css">
   <!-- data.jsの16タイプデータを使うため、types.jsより先に読み込む -->
   <!-- budoux-ja要素・setPhraseText()を使うため、types.jsより先に読み込む -->
+  <!-- sake-utils.jsの「おすすめの日本酒」描画関数を使うため、types.jsより先に読み込む -->
   <script src="js/data.js" defer></script>
   <script src="js/vendor/budoux-ja.min.js" defer></script>
   <script src="js/text-utils.js" defer></script>
+  <script src="js/sake-utils.js" defer></script>
   <script src="js/types.js" defer></script>
   <script src="js/nav.js" defer></script>
 </head>
@@ -67,9 +69,8 @@
 
       <section class="result-section sake-section">
         <h3><budoux-ja>おすすめの日本酒</budoux-ja></h3>
-        <p id="modalSakeBrand" class="sake-brand"></p>
-        <p id="modalSakeBrewery"></p>
-        <p id="modalSakeArea"></p>
+        <!-- 銘柄ごとのカード（中身はtypes.jsがsakeRecommendationsデータから動的に生成する） -->
+        <div id="modalSakeRecommendationsList" class="sake-recommendations-list"></div>
       </section>
     </div>
   </div>

@@ -139,26 +139,81 @@ const personalityTypes = {
 
 // ------------------------------------------------------------
 // 16タイプ分のおすすめ日本酒データ（★仮置き運用）
-// EPDS以外は銘柄未確定のため、プレースホルダーの文言を入れている。
-// 確定次第、このオブジェクトの値のみを差し替える想定。
+// 1タイプにつき1件以上のおすすめ銘柄を配列で持つ（EPDSのみ2件確定済み、他15タイプはプレースホルダー1件）。
+// 各銘柄の項目：
+//   brandName    銘柄名
+//   breweryName  酒蔵名
+//   prefecture   酒蔵の所在地（都道府県）
+//   imageUrl     商品画像（★仮画像を設定中。確定次第、実際のボトル画像に差し替える想定）
+//   homepageUrl  酒蔵の公式サイトURL（未定の場合はnull → ボタン自体を表示しない）
+//   purchaseUrl  購入ページのURL（未定の場合はnull → ボタン自体を表示しない）
 // ------------------------------------------------------------
+const SAKE_PLACEHOLDER_IMAGE_URL = "images/sake-placeholder.png";
+
 const sakeRecommendations = {
-  EPFC: { brandName: "（仮）EPFCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  EPFS: { brandName: "（仮）EPFSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  EPDC: { brandName: "（仮）EPDCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  EPDS: { brandName: "出羽桜", brewery: "出羽桜酒造（山形県）／大矢孝酒造「残草蓬萊」（神奈川県）", area: "山形県／神奈川県" },
-  EAFC: { brandName: "（仮）EAFCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  EAFS: { brandName: "（仮）EAFSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  EADC: { brandName: "（仮）EADCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  EADS: { brandName: "（仮）EADSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IPFC: { brandName: "（仮）IPFCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IPFS: { brandName: "（仮）IPFSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IPDC: { brandName: "（仮）IPDCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IPDS: { brandName: "（仮）IPDSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IAFC: { brandName: "（仮）IAFCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IAFS: { brandName: "（仮）IAFSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IADC: { brandName: "（仮）IADCタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" },
-  IADS: { brandName: "（仮）IADSタイプのおすすめ酒", brewery: "未定（一都三県内で選定予定）", area: "未定" }
+  EPFC: [
+    { brandName: "（仮）EPFCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  EPFS: [
+    { brandName: "（仮）EPFSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  EPDC: [
+    { brandName: "（仮）EPDCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  EPDS: [
+    {
+      brandName: "出羽桜",
+      breweryName: "出羽桜酒造",
+      prefecture: "山形県",
+      imageUrl: SAKE_PLACEHOLDER_IMAGE_URL,
+      homepageUrl: "https://www.dewazakura.co.jp/",
+      purchaseUrl: "https://dewazakura-store.com/"
+    },
+    {
+      brandName: "残草蓬莱",
+      breweryName: "大矢孝酒造",
+      prefecture: "神奈川県",
+      imageUrl: SAKE_PLACEHOLDER_IMAGE_URL,
+      homepageUrl: "https://oyatakashi-shuzo.com/",
+      purchaseUrl: "https://store.sakestreet.com/collections/oya-takashi-brewery-kanagawa"
+    }
+  ],
+  EAFC: [
+    { brandName: "（仮）EAFCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  EAFS: [
+    { brandName: "（仮）EAFSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  EADC: [
+    { brandName: "（仮）EADCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  EADS: [
+    { brandName: "（仮）EADSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IPFC: [
+    { brandName: "（仮）IPFCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IPFS: [
+    { brandName: "（仮）IPFSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IPDC: [
+    { brandName: "（仮）IPDCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IPDS: [
+    { brandName: "（仮）IPDSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IAFC: [
+    { brandName: "（仮）IAFCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IAFS: [
+    { brandName: "（仮）IAFSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IADC: [
+    { brandName: "（仮）IADCタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ],
+  IADS: [
+    { brandName: "（仮）IADSタイプのおすすめ酒", breweryName: "未定", prefecture: "一都三県内で選定予定", imageUrl: SAKE_PLACEHOLDER_IMAGE_URL, homepageUrl: null, purchaseUrl: null }
+  ]
 };
 
 // タイプコード（例: "EPFC"）から、性格データとおすすめ日本酒データを

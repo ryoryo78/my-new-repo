@@ -40,18 +40,18 @@ function init() {
 
   const typeCode = resultData.typeCode;
   const personality = personalityTypes[typeCode];
-  const sake = sakeRecommendations[typeCode];
+  const sakeList = sakeRecommendations[typeCode];
 
   // タイプコードに該当するデータが16タイプの中に見つからない場合もエラー表示にする
-  if (!personality || !sake) {
+  if (!personality || !sakeList || sakeList.length === 0) {
     showError();
     return;
   }
 
   // share.js（SNSシェア画像生成）が参照できるよう、確定した結果を保持しておく
-  currentDiagnosisResult = { typeCode: typeCode, personality: personality, sake: sake };
+  currentDiagnosisResult = { typeCode: typeCode, personality: personality, sakeList: sakeList };
 
-  renderResult(typeCode, personality, sake);
+  renderResult(typeCode, personality, sakeList);
   renderAxisBars(resultData.scores);
   showResultContainer();
 }
@@ -67,9 +67,7 @@ function cacheDomElements() {
     descriptionText: document.getElementById("descriptionText"),
     dietDescriptionText: document.getElementById("dietDescriptionText"),
     favoriteFoodsList: document.getElementById("favoriteFoodsList"),
-    sakeBrandText: document.getElementById("sakeBrandText"),
-    sakeBreweryText: document.getElementById("sakeBreweryText"),
-    sakeAreaText: document.getElementById("sakeAreaText"),
+    sakeRecommendationsList: document.getElementById("sakeRecommendationsList"),
     restartLink: document.getElementById("restartLink"),
     axisSection: document.getElementById("axisSection"),
     axisBars: document.getElementById("axisBars")
@@ -124,7 +122,7 @@ function isResultExpired(savedAt) {
 // ------------------------------------------------------------
 
 // タイプコード・性格データ・日本酒データを画面に反映する
-function renderResult(typeCode, personality, sake) {
+function renderResult(typeCode, personality, sakeList) {
   // タイプコード（例：EPFC）はアルファベットの略号なので、文節区切りの対象外とする
   elements.typeCodeText.textContent = typeCode;
 
@@ -134,10 +132,7 @@ function renderResult(typeCode, personality, sake) {
 
   renderFavoriteFoods(personality.favoriteFoods);
   renderTypeImage(typeCode, personality.typeName);
-
-  setPhraseText(elements.sakeBrandText, "銘柄：" + sake.brandName);
-  setPhraseText(elements.sakeBreweryText, "酒蔵：" + sake.brewery);
-  setPhraseText(elements.sakeAreaText, "産地：" + sake.area);
+  renderSakeRecommendations(elements.sakeRecommendationsList, sakeList);
 }
 
 // 好む食べ物の配列を、リスト（<li>要素）として描画する
@@ -150,6 +145,9 @@ function renderFavoriteFoods(favoriteFoods) {
     elements.favoriteFoodsList.appendChild(listItem);
   });
 }
+
+// おすすめの日本酒の描画（renderSakeRecommendations等）はjs/sake-utils.jsで定義している
+// （result.html・types.htmlのモーダルの両方から共通で使うため）
 
 // タイプ画像（images/タイプコード.png）を表示する
 // 該当する画像が存在しない場合は、画像エリアごと非表示にする
