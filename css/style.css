@@ -270,13 +270,13 @@ h1, h2, p {
 }
 
 .app-title {
-  margin: 0 24px 20px;
+  margin: 0 24px 40px;
   font-size: clamp(1.5rem, 5vw, 1.9rem);
   color: var(--color-navy);
 }
 
 .app-description {
-  margin: 20px 24px 28px;
+  margin: 40px 24px 28px;
   line-height: 1.8;
   color: var(--color-text);
 }
@@ -410,7 +410,7 @@ h1, h2, p {
 }
 
 .question-item-text {
-  margin: 0 0 12px;
+  margin: 0 0 28px;
   font-size: 1rem;
   font-weight: bold;
   line-height: 1.7;
@@ -548,14 +548,14 @@ h1, h2, p {
 }
 
 .type-name {
-  margin: 0 0 24px;
+  margin: 0 0 40px;
   font-size: 1.6rem;
   color: var(--color-text);
 }
 
 .result-section {
   text-align: left;
-  margin-bottom: 28px;
+  margin-bottom: 44px;
 }
 
 .result-section h2 {
@@ -768,8 +768,8 @@ h1, h2, p {
 
 /* SNSシェア画像生成エリア */
 
-.share-description {
-  margin: 0 0 16px;
+.share-section .share-description {
+  margin: 0 0 32px;
   color: var(--color-text-muted);
 }
 
@@ -863,7 +863,7 @@ h1, h2, p {
 }
 
 .types-description {
-  margin: 0 0 24px;
+  margin: 0 0 44px;
   color: var(--color-text-muted);
 }
 
@@ -878,6 +878,15 @@ h1, h2, p {
 @media (min-width: 480px) {
   .types-grid {
     grid-template-columns: repeat(2, 1fr);
+    /* 一番下の右列カードが60pxずれた分、フッターと重ならないよう下に余白を追加する */
+    margin-bottom: 88px;
+  }
+
+  /* 右列（偶数番目）を下にずらし、左右が互い違いになるように配置する。
+     margin-bottomを同量マイナスにして打ち消すことで、行の高さ自体には影響を与えない */
+  .type-card:nth-child(even) {
+    margin-top: 60px;
+    margin-bottom: -60px;
   }
 }
 
