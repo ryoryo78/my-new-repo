@@ -576,21 +576,25 @@ h1, h2, p {
 }
 
 /* おすすめの日本酒セクションは、紺×金の「酒ラベル」風デザインで特別感を出す */
+/* カードの左右パディング分をマイナスマージンで打ち消し、横幅いっぱいまで塗りつぶす */
 .sake-section {
   background: linear-gradient(135deg, var(--color-navy), var(--color-navy-light));
-  padding: 18px 16px;
-  border-radius: var(--radius-input);
+  padding: 18px 0;
+  margin-left: -20px;
+  margin-right: -20px;
+  border-radius: 0;
 }
 
 .sake-section h2 {
+  padding: 0 16px;
   color: var(--color-gold);
 }
 
 /* 銘柄カードは、幅に余裕があれば自動で横並びになるグリッドにする
    （1件のときは1枚が幅いっぱいに、2件以上かつ横幅が足りるときは横並びになる） */
 .sake-recommendations-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 18px;
 }
 
@@ -599,43 +603,57 @@ h1, h2, p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(232, 184, 74, 0.35);
-  border-radius: var(--radius-input);
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
   padding: 18px 14px;
 }
 
 .sake-brand {
+  align-self: stretch;
   margin: 0 0 4px;
   font-size: 1.1rem;
   font-weight: bold;
   color: var(--color-gold);
-  text-align: center;
+  text-align: left;
 }
 
 .sake-brewery {
+  align-self: stretch;
   margin: 0;
   font-size: 0.85rem;
   color: #fdf6e8;
-  text-align: center;
+  text-align: left;
+}
+
+/* ボトル画像の左右の背景を半透明の黒で塗りつぶす帯（カードの左右パディング分を打ち消し、端まで広げる） */
+.sake-image-frame {
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-left: -14px;
+  margin-right: -14px;
+  padding: 16px 0;
+  background-color: rgba(0, 0, 0, 0.35);
 }
 
 .sake-image {
   display: block;
   width: 132px;
   height: auto;
-  margin: 16px auto;
   padding: 10px;
   background-color: #ffffff;
-  border-radius: var(--radius-input);
+  border-radius: 0;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .sake-buttons {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   width: 100%;
   margin-top: auto;
+  padding-top: 24px;
 }
 
 .sake-link-button {
@@ -644,13 +662,21 @@ h1, h2, p {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 5px;
   padding: 8px 10px;
   font-size: 0.82rem;
   font-weight: bold;
   text-align: center;
   text-decoration: none;
-  border-radius: var(--radius-button);
+  border-radius: 0;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 新しいタブで開くことを示す外部リンクアイコン */
+.sake-link-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .sake-link-button:hover {
@@ -970,6 +996,11 @@ h1, h2, p {
     padding: 40px 36px;
   }
 
+  .sake-section {
+    margin-left: -36px;
+    margin-right: -36px;
+  }
+
   .top-container {
     padding: 48px 0;
   }
@@ -984,6 +1015,11 @@ h1, h2, p {
 @media (min-width: 900px) {
   .card {
     padding: 48px 48px;
+  }
+
+  .sake-section {
+    margin-left: -48px;
+    margin-right: -48px;
   }
 
   /* 質問画面：質問文・ボタン・余白を大きくして読みやすく押しやすくする（カード幅はスマホ幅のまま） */

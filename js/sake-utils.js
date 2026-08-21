@@ -31,14 +31,18 @@ function createSakeRecommendationElement(sake, number) {
   breweryText.className = "sake-brewery";
   setPhraseText(breweryText, sake.breweryName + "（" + sake.prefecture + "）");
 
+  const imageFrame = document.createElement("div");
+  imageFrame.className = "sake-image-frame";
+
   const image = document.createElement("img");
   image.className = "sake-image";
   image.src = sake.imageUrl;
   image.alt = sake.brandName;
+  imageFrame.appendChild(image);
 
   item.appendChild(brandText);
   item.appendChild(breweryText);
-  item.appendChild(image);
+  item.appendChild(imageFrame);
 
   const buttons = createSakeLinkButtons(sake);
   if (buttons) {
@@ -77,5 +81,37 @@ function createSakeLinkButton(url, label, modifierClassName) {
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   setPhraseText(link, label);
+  link.appendChild(createExternalLinkIcon());
   return link;
+}
+
+// 「新しいタブで開く」ことを示す外部リンクアイコン（文字色に合わせて表示されるようcurrentColorを使う）
+function createExternalLinkIcon() {
+  const svgNs = "http://www.w3.org/2000/svg";
+  const icon = document.createElementNS(svgNs, "svg");
+  icon.setAttribute("class", "sake-link-icon");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "2.5");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("stroke-linejoin", "round");
+  icon.setAttribute("aria-hidden", "true");
+
+  const path = document.createElementNS(svgNs, "path");
+  path.setAttribute("d", "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6");
+  icon.appendChild(path);
+
+  const polyline = document.createElementNS(svgNs, "polyline");
+  polyline.setAttribute("points", "15 3 21 3 21 9");
+  icon.appendChild(polyline);
+
+  const line = document.createElementNS(svgNs, "line");
+  line.setAttribute("x1", "10");
+  line.setAttribute("y1", "14");
+  line.setAttribute("x2", "21");
+  line.setAttribute("y2", "3");
+  icon.appendChild(line);
+
+  return icon;
 }
