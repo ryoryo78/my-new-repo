@@ -26,6 +26,9 @@
   --color-gold: #e8b84a;
   --color-gold-dark: #c8922a;
 
+  /* 全ページ共通のカード横幅（スマホ画面と同じ幅にそろえる） */
+  --width-card-max: 480px;
+
   --radius-card: 24px;
   --radius-button: 999px;
   --radius-input: 14px;
@@ -61,20 +64,54 @@ h1, h2, p {
 
 .page-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
-  /* 右上に固定表示する.top-navと重ならないよう、上側にだけ余分な余白を確保する */
-  padding: 72px 16px 32px;
+  padding: 0 16px;
 }
 
 .card {
   width: 100%;
+  /* コンテンツが短いページでも、ヘッダー・フッターの残りの縦スペースいっぱいに広がるようにする */
+  flex: 1 0 auto;
   background-color: var(--color-surface);
-  border-radius: var(--radius-card);
+  border-radius: 0;
   padding: 28px 20px;
-  border: 1.5px solid var(--color-gold);
   box-shadow: var(--shadow-card);
+}
+
+/* ------------------------------------------------------------
+   全ページ共通のヘッダー・フッター（カードと同じ幅、背景画像と同系統の紺色）
+   ------------------------------------------------------------ */
+
+.site-header,
+.site-footer {
+  width: 100%;
+  max-width: var(--width-card-max);
+  flex-shrink: 0;
+  background-color: var(--color-navy);
+  text-align: center;
+}
+
+.site-header {
+  padding: 18px 20px;
+}
+
+.site-header a {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--color-gold);
+  text-decoration: none;
+}
+
+.site-footer {
+  padding: 14px 20px;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #fdf6e8;
 }
 
 /* ------------------------------------------------------------
@@ -226,12 +263,8 @@ h1, h2, p {
    トップ画面（index.html）
    ------------------------------------------------------------ */
 
-.top-page {
-  align-items: center;
-}
-
 .top-container {
-  max-width: 440px;
+  max-width: var(--width-card-max);
   text-align: center;
   padding: 40px 0;
 }
@@ -304,7 +337,7 @@ h1, h2, p {
    ------------------------------------------------------------ */
 
 .quiz-container {
-  max-width: 480px;
+  max-width: var(--width-card-max);
 }
 
 /* 進捗バー：スクロールしても常に見えるよう画面上部に固定表示する */
@@ -313,7 +346,7 @@ h1, h2, p {
   position: sticky;
   top: 64px;
   z-index: 10;
-  background-color: var(--color-surface);
+  background-color: transparent;
   padding: 8px 0 16px;
   margin-bottom: 12px;
 }
@@ -322,6 +355,7 @@ h1, h2, p {
   width: 100%;
   height: 12px;
   background-color: var(--color-primary-light);
+  border: 1px solid var(--color-gold-dark);
   border-radius: var(--radius-button);
   overflow: hidden;
 }
@@ -485,7 +519,7 @@ h1, h2, p {
    ------------------------------------------------------------ */
 
 .result-container {
-  max-width: 560px;
+  max-width: var(--width-card-max);
   text-align: center;
 }
 
@@ -792,7 +826,7 @@ h1, h2, p {
    ------------------------------------------------------------ */
 
 .types-container {
-  max-width: 640px;
+  max-width: var(--width-card-max);
   text-align: center;
 }
 
@@ -814,16 +848,10 @@ h1, h2, p {
   margin-bottom: 28px;
 }
 
-/* 横幅に応じて、キャラクター画像の列数が1列／2列／4列のいずれかになるようにする */
+/* カード幅がスマホ幅で固定のため、横幅に応じた列数は1列／2列までにとどめる */
 @media (min-width: 480px) {
   .types-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 768px) {
-  .types-grid {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -935,7 +963,7 @@ h1, h2, p {
 
 @media (min-width: 600px) {
   .page-wrapper {
-    padding: 72px 24px 56px;
+    padding: 0 24px;
   }
 
   .card {
@@ -958,11 +986,7 @@ h1, h2, p {
     padding: 48px 48px;
   }
 
-  /* 質問画面：カードを少し広げ、質問文・ボタン・余白を大きくして読みやすく押しやすくする */
-
-  .quiz-container {
-    max-width: 640px;
-  }
+  /* 質問画面：質問文・ボタン・余白を大きくして読みやすく押しやすくする（カード幅はスマホ幅のまま） */
 
   .questions-list {
     gap: 28px;
@@ -991,35 +1015,8 @@ h1, h2, p {
     padding: 16px 32px;
   }
 
-  /* 結果画面：情報セクションを2列に並べ、縦に長くなりすぎないようにする */
-
-  .result-container {
-    max-width: 760px;
-  }
-
-  .result-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-    gap: 8px 32px;
-  }
-
-  .result-info-grid .result-section {
-    margin-bottom: 0;
-  }
-
-  /* 好む食べ物・おすすめの日本酒は、性格・食事の傾向より内容の分量が大きく変わりやすいため
-     2列のどちらかに詰め込まず、それぞれ単独で幅いっぱいの行にして高さのアンバランスを防ぐ */
-  .foods-section,
-  .sake-section {
-    grid-column: 1 / -1;
-  }
-
-  .axis-bars {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px 32px;
-  }
+  /* カード幅が常にスマホ幅で固定のため、診断スコア・性格・食事の傾向などは
+     PC幅でも2列にはせず、スマホ画面と同じ縦積みレイアウトのままにする */
 
   /* 「もう一度診断する」「画像を保存する」ボタンは、幅いっぱいに引き伸ばさず中央に程よい大きさで表示する */
   .restart-area .primary-button,
