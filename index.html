@@ -34,9 +34,10 @@
 
       <h1 class="app-title"><budoux-ja>日本酒パーソナリティ診断</budoux-ja></h1>
 
-      <!-- 16タイプのキャラクター画像が横に流れるように表示するエリア（装飾のためスクリーンリーダーには読み上げさせない） -->
+      <!-- 16タイプのキャラクター画像が2段で横に流れるように表示するエリア（装飾のためスクリーンリーダーには読み上げさせない） -->
+      <!-- 上段：左から右へ流れる -->
       <div class="character-scroller" aria-hidden="true">
-        <div class="character-scroller-track">
+        <div class="character-scroller-track character-scroller-track-ltr">
           <img src="images/epfc.png" alt="" class="character-scroller-image">
           <img src="images/epfs.png" alt="" class="character-scroller-image">
           <img src="images/epdc.png" alt="" class="character-scroller-image">
@@ -45,6 +46,21 @@
           <img src="images/eafs.png" alt="" class="character-scroller-image">
           <img src="images/eadc.png" alt="" class="character-scroller-image">
           <img src="images/eads.png" alt="" class="character-scroller-image">
+          <!-- 継ぎ目のない無限スクロールにするため、同じ8枚をもう一度並べる -->
+          <img src="images/epfc.png" alt="" class="character-scroller-image">
+          <img src="images/epfs.png" alt="" class="character-scroller-image">
+          <img src="images/epdc.png" alt="" class="character-scroller-image">
+          <img src="images/epds.png" alt="" class="character-scroller-image">
+          <img src="images/eafc.png" alt="" class="character-scroller-image">
+          <img src="images/eafs.png" alt="" class="character-scroller-image">
+          <img src="images/eadc.png" alt="" class="character-scroller-image">
+          <img src="images/eads.png" alt="" class="character-scroller-image">
+        </div>
+      </div>
+
+      <!-- 下段：右から左へ流れる -->
+      <div class="character-scroller" aria-hidden="true">
+        <div class="character-scroller-track character-scroller-track-rtl">
           <img src="images/ipfc.png" alt="" class="character-scroller-image">
           <img src="images/ipfs.png" alt="" class="character-scroller-image">
           <img src="images/ipdc.png" alt="" class="character-scroller-image">
@@ -53,15 +69,7 @@
           <img src="images/iafs.png" alt="" class="character-scroller-image">
           <img src="images/iadc.png" alt="" class="character-scroller-image">
           <img src="images/iads.png" alt="" class="character-scroller-image">
-          <!-- 継ぎ目のない無限スクロールにするため、同じ16枚をもう一度並べる -->
-          <img src="images/epfc.png" alt="" class="character-scroller-image">
-          <img src="images/epfs.png" alt="" class="character-scroller-image">
-          <img src="images/epdc.png" alt="" class="character-scroller-image">
-          <img src="images/epds.png" alt="" class="character-scroller-image">
-          <img src="images/eafc.png" alt="" class="character-scroller-image">
-          <img src="images/eafs.png" alt="" class="character-scroller-image">
-          <img src="images/eadc.png" alt="" class="character-scroller-image">
-          <img src="images/eads.png" alt="" class="character-scroller-image">
+          <!-- 継ぎ目のない無限スクロールにするため、同じ8枚をもう一度並べる -->
           <img src="images/ipfc.png" alt="" class="character-scroller-image">
           <img src="images/ipfs.png" alt="" class="character-scroller-image">
           <img src="images/ipdc.png" alt="" class="character-scroller-image">
@@ -73,13 +81,15 @@
         </div>
       </div>
 
-      <p class="app-description">
-        <budoux-ja>全32問のかんたんな質問に答えるだけで、</budoux-ja><br>
-        <budoux-ja>あなたの性格・食生活のタイプを16種類の中から診断。</budoux-ja> <br>
-        <budoux-ja>あなたにぴったりの日本酒銘柄もあわせてご紹介します。</budoux-ja>
-      </p>
+      <div class="home-cta-panel">
+        <p class="app-description">
+          <budoux-ja>全32問のかんたんな質問に答えるだけで、</budoux-ja><br>
+          <budoux-ja>あなたの性格・食生活のタイプを16種類の中から診断。</budoux-ja> <br>
+          <budoux-ja>あなたにぴったりの日本酒銘柄もあわせてご紹介します。</budoux-ja>
+        </p>
 
-      <a href="questions.html" id="startButton" class="primary-button start-button"><budoux-ja>診断をはじめる</budoux-ja></a>
+        <a href="questions.html" id="startButton" class="primary-button start-button"><budoux-ja>診断をはじめる</budoux-ja></a>
+      </div>
 
     </div>
 

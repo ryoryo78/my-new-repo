@@ -266,29 +266,45 @@ h1, h2, p {
 .top-container {
   max-width: var(--width-card-max);
   text-align: center;
-  padding: 40px 0;
+  padding: 0;
+  /* コンテンツより画面が縦長のときに、カード下端の余白が白いまま残らないよう、
+     縦に並べた最後の要素（home-cta-panel）で余ったスペースを埋める */
+  display: flex;
+  flex-direction: column;
 }
 
+/* カード上端の余白ぶんもタイトル自身のpaddingに含め、塗りつぶしがカード端まで届くようにする */
 .app-title {
-  margin: 0 24px 40px;
+  margin: 0 0 40px;
+  padding: 64px 24px 24px;
   font-size: clamp(1.5rem, 5vw, 1.9rem);
   color: var(--color-navy);
+  background-color: var(--color-primary-light);
+}
+
+/* 説明文＋診断をはじめるボタンをまとめた、薄いベージュのパネル。
+   カード下端の余白ぶんもパネル自身のpaddingに含め、塗りつぶしがカード端まで届くようにする。
+   flex-growで、画面が縦長のときに残るスペースも塗りつぶす */
+.home-cta-panel {
+  flex: 1 0 auto;
+  margin-top: 40px;
+  padding: 32px 24px 72px;
+  background-color: var(--color-primary-light);
 }
 
 .app-description {
-  margin: 40px 24px 28px;
+  margin: 0 0 28px;
   line-height: 1.8;
   color: var(--color-text);
 }
 
 .start-button {
-  margin: 0 24px;
-  width: calc(100% - 48px);
+  width: 100%;
   font-size: 1.15rem;
   padding: 18px 24px;
 }
 
-/* 16タイプのキャラクター画像が横に流れ続けるスクロールエリア */
+/* 16タイプのキャラクター画像が2段で横に流れ続けるスクロールエリア（上段＝左から右／下段＝右から左） */
 
 .character-scroller {
   width: 100%;
@@ -297,12 +313,23 @@ h1, h2, p {
   mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
 }
 
+.character-scroller + .character-scroller {
+  margin-top: 16px;
+}
+
 .character-scroller-track {
   display: flex;
   width: max-content;
   gap: 20px;
   padding: 4px 0;
-  animation: character-scroll 56s linear infinite;
+}
+
+.character-scroller-track-rtl {
+  animation: character-scroll-rtl 32s linear infinite;
+}
+
+.character-scroller-track-ltr {
+  animation: character-scroll-ltr 32s linear infinite;
 }
 
 .character-scroller-image {
@@ -315,7 +342,8 @@ h1, h2, p {
   background-color: var(--color-surface);
 }
 
-@keyframes character-scroll {
+/* 右から左へ流れる（従来のスクロール方向） */
+@keyframes character-scroll-rtl {
   from {
     transform: translateX(0);
   }
@@ -325,9 +353,20 @@ h1, h2, p {
   }
 }
 
+/* 左から右へ流れる（rtlの逆再生） */
+@keyframes character-scroll-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 /* 動きを抑えたい設定を優先するユーザーには、アニメーションを止める */
 @media (prefers-reduced-motion: reduce) {
-  .character-scroller-track {
+  .character-scroller-track-rtl,
+  .character-scroller-track-ltr {
     animation: none;
   }
 }
@@ -1005,13 +1044,22 @@ h1, h2, p {
     padding: 40px 36px;
   }
 
+  /* .cardのpaddingより後ろで上書きし、ホーム画面のカードは左右の余白なしを維持する */
+  .top-container {
+    padding: 0;
+  }
+
   .sake-section {
     margin-left: -36px;
     margin-right: -36px;
   }
 
-  .top-container {
-    padding: 48px 0;
+  .app-title {
+    padding-top: 72px;
+  }
+
+  .home-cta-panel {
+    padding-bottom: 80px;
   }
 }
 
@@ -1024,6 +1072,12 @@ h1, h2, p {
 @media (min-width: 900px) {
   .card {
     padding: 48px 48px;
+  }
+
+  /* .cardのpaddingより後ろで上書きし、ホーム画面のカードは余白なしを維持する
+     （上下の余白はapp-title・home-cta-panel自身のpaddingに含めている） */
+  .top-container {
+    padding: 0;
   }
 
   .sake-section {
