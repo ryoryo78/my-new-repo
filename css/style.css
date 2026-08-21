@@ -117,6 +117,7 @@ h1, h2, p {
   height: 2px;
   border-radius: 2px;
   background-color: var(--color-navy);
+  transition: transform 0.2s ease, opacity 0.2s ease, top 0.2s ease;
 }
 
 .nav-toggle-icon {
@@ -133,6 +134,21 @@ h1, h2, p {
   position: absolute;
   left: 0;
   top: 6px;
+}
+
+/* メニューが開いている間（aria-expanded="true"）は3本線を×に変形する */
+.nav-toggle-button[aria-expanded="true"] .nav-toggle-icon {
+  background-color: transparent;
+}
+
+.nav-toggle-button[aria-expanded="true"] .nav-toggle-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.nav-toggle-button[aria-expanded="true"] .nav-toggle-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
 }
 
 /* ハンバーガーボタンを押すと開く、ページ間リンクのメニュー */
